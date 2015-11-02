@@ -1,0 +1,8 @@
+target
+.classpath
+.project
+.settings
+.DS_Store
+src/main/java/com/toomasr/sgf4j/example
+.hg
+.hgignore
