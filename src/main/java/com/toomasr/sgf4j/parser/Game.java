@@ -6,7 +6,6 @@ import java.util.Map;
 public class Game {
   private Map<String, String> properties = new HashMap<String, String>();
   private GameNode rootNode;
-  private GameNode currentNode = null;
   private int noMoves = 0;
 
   public void addProperty(String key, String value) {
@@ -29,45 +28,12 @@ public class Game {
     return rootNode;
   }
 
-  public GameNode getNextNode() {
-    if (currentNode == null) {
-      currentNode = rootNode;
-      return rootNode;
-    }
-
-    GameNode rtrn = currentNode.getNextNode();
-    currentNode = rtrn;
-    return rtrn;
-  }
-
-  public void reset() {
-    currentNode = null;
-  }
-
-  public GameNode getPreviousMove() {
-    GameNode rtrn = currentNode.getParentNode();
-    currentNode = rtrn;
-    return rtrn;
-  }
-
-  public GameNode getCurrentMove() {
-    return currentNode;
-  }
-
   public int getNoMoves() {
     return noMoves;
   }
 
   public void setNoMoves(int noMoves) {
     this.noMoves = noMoves;
-  }
-
-  public boolean hasNextMove() {
-    GameNode activeNode = currentNode;
-    if (currentNode == null)
-      activeNode = rootNode;
-
-    return activeNode.getNextNode() != null;
   }
 
   public void postProcess() {
