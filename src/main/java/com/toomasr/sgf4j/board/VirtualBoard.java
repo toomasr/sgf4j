@@ -9,28 +9,42 @@ import java.util.Map;
 import java.util.Set;
 
 import com.toomasr.sgf4j.parser.GameNode;
-import com.toomasr.sgf4j.parser.Game;
 import com.toomasr.sgf4j.parser.Util;
 
 public class VirtualBoard {
   private int size = 19;
-  private Square[][] board = new Square[size][size];
+  private Square[][] vBoard = new Square[size][size];
   private List<BoardListener> boardListeners = new ArrayList<>();
   private Map<GameNode, Set<Group>> moveToRemovedGroups = new HashMap<>();
 
   public VirtualBoard() {
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board.length; j++) {
-        board[i][j] = new Square(StoneState.EMPTY, i, j);
+    for (int i = 0; i < vBoard.length; i++) {
+      for (int j = 0; j < vBoard.length; j++) {
+        vBoard[i][j] = new Square(StoneState.EMPTY, i, j);
       }
     }
   }
 
   public void placeStone(StoneState color, int x, int y) {
-    this.board[x][y] = new Square(color, x, y);
+    this.vBoard[x][y] = new Square(color, x, y);
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
       BoardListener boardListener = ite.next();
       boardListener.placeStone(x, y, color);
+    }
+  }
+
+  public void playMove(GameNode node, GameNode prevMove) {
+
+    int x = node.getCoords()[0];
+    int y = node.getCoords()[1];
+
+    this.vBoard[x][y] = new Square(node.getColorAsEnum(), x, y);
+    placeStone(node);
+
+    for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
+      BoardListener boardListener = ite.next();
+      boardListener.placeStone(x, y, node.getColorAsEnum());
+      boardListener.playMove(node, prevMove);
     }
   }
 
@@ -59,7 +73,7 @@ public class VirtualBoard {
     Set<Group> rtrn = new HashSet<Group>();
     for (Iterator<Group> ite = groups.iterator(); ite.hasNext();) {
       Group group = ite.next();
-      if (group.isDead(board)) {
+      if (group.isDead(vBoard)) {
         removeStones(group);
         rtrn.add(group);
       }
@@ -68,7 +82,7 @@ public class VirtualBoard {
   }
 
   public void removeStone(int x, int y) {
-    board[x][y] = new Square(x, y);
+    vBoard[x][y] = new Square(x, y);
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
       BoardListener boardListener = ite.next();
       boardListener.removeStone(x, y);
@@ -87,10 +101,10 @@ public class VirtualBoard {
 
     Set<Group> groups = new HashSet<Group>();
     Group activeGroup = new Group();
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board[i].length; j++) {
+    for (int i = 0; i < vBoard.length; i++) {
+      for (int j = 0; j < vBoard[i].length; j++) {
         // we found a group, lets expand this
-        if (board[i][j].isOfColor(color) && !alreadyChecked.contains(board[i][j])) {
+        if (vBoard[i][j].isOfColor(color) && !alreadyChecked.contains(vBoard[i][j])) {
           populateGroup(i, j, color, activeGroup);
           alreadyChecked.addAll(activeGroup.stones);
 
@@ -104,8 +118,8 @@ public class VirtualBoard {
   }
 
   private void populateGroup(int i, int j, StoneState color, Group activeGroup) {
-    if (board[i][j].isOfColor(color) && !activeGroup.contains(board[i][j])) {
-      activeGroup.addStone(board[i][j]);
+    if (vBoard[i][j].isOfColor(color) && !activeGroup.contains(vBoard[i][j])) {
+      activeGroup.addStone(vBoard[i][j]);
       if (i - 1 > -1)
         populateGroup(i - 1, j, color, activeGroup);
       if (i + 1 < 19)
@@ -125,8 +139,8 @@ public class VirtualBoard {
       return false;
     }
 
-    if ((j + 1 >= size) || board[i][j + 1].isOfColor(oppColor(color))) {
-      if ((i + 1 >= size) || board[i + 1][j].isOfColor(oppColor(color))) {
+    if ((j + 1 >= size) || vBoard[i][j + 1].isOfColor(oppColor(color))) {
+      if ((i + 1 >= size) || vBoard[i + 1][j].isOfColor(oppColor(color))) {
         return true;
       }
     }
@@ -144,16 +158,16 @@ public class VirtualBoard {
   }
 
   public void printBoard() {
-    for (int i = 0; i < board.length; i++) {
-      for (int j = 0; j < board[i].length; j++) {
-        System.out.print(board[i][j]);
+    for (int i = 0; i < vBoard.length; i++) {
+      for (int j = 0; j < vBoard[i].length; j++) {
+        System.out.print(vBoard[i][j]);
       }
       System.out.println();
     }
   }
 
   public Square getCoord(int x, int y) {
-    return board[x][y];
+    return vBoard[x][y];
   }
 
   public static VirtualBoard setUpFromStringBoard(String board) {
@@ -168,47 +182,54 @@ public class VirtualBoard {
     return rtrn;
   }
 
-  public void fastForwardTo(Game game, GameNode move) {
-    GameNode node = game.getRootNode();
+  public void fastForwardTo(GameNode fwdTo) {
+    // the fwdTo could be an element in one of the child nodes
+    // it is really difficult to find if we start from the rootNode
+    // so lets start from the node itself, go backwards until we
+    // find the rootnode and later on play all the moves until that point
+    List<GameNode> movesToPlay = new ArrayList<>();
+    GameNode node = fwdTo;
+    do {
+      if (node.isMove())
+        movesToPlay.add(node);
+    }
+    while ((node = node.getParentNode()) != null);
 
-    while ((node = game.getNextNode()) != null) {
-      if (!node.isMove()) {
-        continue;
-      }
-      placeStone(node);
-      Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
-      moveToRemovedGroups.put(move, removedGroups);
-      if (move.equals(node))
-        break;
+    GameNode prevMove = null;
+    // now lets play the moves
+    for (int i = movesToPlay.size() - 1; i > -1; i--) {
+      node = movesToPlay.get(i);
+      playMove(node, prevMove);
+      Set<Group> removedGroups = removeDeadGroupsForOppColor(fwdTo.getColorAsEnum());
+      moveToRemovedGroups.put(fwdTo, removedGroups);
+      
+      prevMove = node;
     }
   }
 
   public Square[][] getBoard() {
-    return board;
+    return vBoard;
   }
 
   public void addBoardListener(BoardListener listener) {
     this.boardListeners.add(listener);
   }
 
-  public void makeMove(GameNode move) {
-    String moveStr = move.getMoveString();
-    int[] moveCoords = Util.alphaToCoords(moveStr);
-    
-    placeStone(move.getColorAsEnum(), moveCoords[0], moveCoords[1]);
+  public void makeMove(GameNode move, GameNode prevMove) {
     Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
     moveToRemovedGroups.put(move, removedGroups);
+    playMove(move, prevMove);
   }
 
-  public void undoMove(GameNode currentMove) {
-    String currMoveStr = currentMove.getMoveString();
+  public void undoMove(GameNode moveNode, GameNode prevMove) {
+    String currMoveStr = moveNode.getMoveString();
     int[] moveCoords = Util.alphaToCoords(currMoveStr);
     removeStone(moveCoords[0], moveCoords[1]);
-    
+
     // if the move that we are taking back happened to remove
     // stones on the board and now the move is undone we need
     // to put those stones back
-    Set<Group> removedGroups = moveToRemovedGroups.get(currentMove);
+    Set<Group> removedGroups = moveToRemovedGroups.get(moveNode);
     if (removedGroups != null) {
       for (Iterator<Group> ite = removedGroups.iterator(); ite.hasNext();) {
         Group group = ite.next();
@@ -217,6 +238,11 @@ public class VirtualBoard {
           placeStone(square);
         }
       }
+    }
+
+    for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
+      BoardListener boardListener = ite.next();
+      boardListener.undoMove(moveNode, prevMove);
     }
   }
 }
