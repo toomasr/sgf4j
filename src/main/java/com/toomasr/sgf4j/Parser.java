@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.toomasr.sgf4j.parser.GameNode;
 import com.toomasr.sgf4j.parser.Game;
+import com.toomasr.sgf4j.parser.GameNode;
 
 public class Parser {
   private static final Logger log = LoggerFactory.getLogger(Parser.class);
@@ -134,14 +134,13 @@ public class Parser {
     // the root node
     GameNode parentNode = null;
     // replace token delimiters
-    String gameStr = prepareGame();
 
     int moveNo = 1;
 
-    for (int i = 0; i < gameStr.length(); i++) {
-      char chr = gameStr.charAt(i);
-      if (';' == chr) {
-        String nodeContents = consumeUntil(gameStr, i);
+    for (int i = 0; i < originalGame.length(); i++) {
+      char chr = originalGame.charAt(i);
+      if (';' == chr && (i == 0 || originalGame.charAt(i - 1) != '\\')) {
+        String nodeContents = consumeUntil(originalGame, i);
         i = i + nodeContents.length();
 
         GameNode node = parseToken(nodeContents, parentNode, game);
@@ -231,7 +230,7 @@ public class Parser {
         game.addProperty(key, value);
       }
       else if (nodeProps.contains(key)) {
-        rtrnNode.addProperty(key, value);
+        rtrnNode.addProperty(key, cleanValue(value));
       }
       else if ("L".equals(key)) {
         log.debug("Not handling " + key + " = " + value);
@@ -245,9 +244,9 @@ public class Parser {
     return rtrnNode;
   }
 
-  private String prepareGame() {
-    String gameStr = originalGame.replaceAll("\\\\;", "####escapedSemiColon####");
-    return gameStr;
+  private String cleanValue(String value) {
+    String cleaned = value.replaceAll("\\\\;", ";");
+    return cleaned;
   }
 
   private String prepareToken(String token) {
