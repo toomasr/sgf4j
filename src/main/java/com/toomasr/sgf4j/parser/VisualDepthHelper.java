@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Precomputes the visual depth for the game nodes. The visual
+ * depth designates as how deep in the tree should the line be
+ * shown if a GUI is being used. I should move this helper to
+ * sgf4j-gui project but haven't done it yet.
+ */
 public class VisualDepthHelper {
 
   public void calculateVisualDepth(GameNode lastNode) {
