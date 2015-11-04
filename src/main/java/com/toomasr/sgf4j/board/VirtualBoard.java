@@ -34,7 +34,6 @@ public class VirtualBoard {
   }
 
   public void playMove(GameNode node, GameNode prevMove) {
-
     int x = node.getCoords()[0];
     int y = node.getCoords()[1];
 
@@ -43,7 +42,6 @@ public class VirtualBoard {
 
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
       BoardListener boardListener = ite.next();
-      boardListener.placeStone(x, y, node.getColorAsEnum());
       boardListener.playMove(node, prevMove);
     }
   }
