@@ -1,6 +1,5 @@
 package com.toomasr.sgf4j.parser;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,9 +54,4 @@ public class Util {
     }
     return new int[] { alphaToCoord.get(input.charAt(0) + ""), alphaToCoord.get(input.charAt(1) + "") };
   }
-
-  public static File getHomeFolder() {
-    return new File(System.getProperty("user.home"));
-  }
-  
 }
