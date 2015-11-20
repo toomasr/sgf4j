@@ -19,9 +19,13 @@ public class VisualDepthHelper {
     if (lastNode == null) {
       return;
     }
+    
+    // a XyZ matrix that we'll fill with 1s and 0s based
+    // on whether a square is occupied or not
     List<List<Integer>> depthMatrix = new ArrayList<>();
 
     initializeMainLine(lastNode, depthMatrix);
+    
     calculateVisualDepthFor(lastNode, depthMatrix);
   }
 
@@ -68,9 +72,10 @@ public class VisualDepthHelper {
   protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix) {
     int length = findLengthAtDepth(node);
     // little point in searching on the 0th row
-    // which is taken up by the mainline
+    // which is taken up by the main line
     int depthDelta = 1;
     do {
+      // init the matrix at this depth if not yet done
       if (depthMatrix.size() <= depthDelta) {
         for (int i = depthMatrix.size(); i <= depthDelta; i++) {
           depthMatrix.add(i, new ArrayList<Integer>());
@@ -80,6 +85,7 @@ public class VisualDepthHelper {
       List<Integer> levelList = depthMatrix.get(depthDelta);
 
       boolean available = isAvailableForLineOfPlay(node, length, levelList);
+      
       if (available) {
         bookForLineOfPlay(node, length, levelList);
         break;
@@ -95,23 +101,26 @@ public class VisualDepthHelper {
   }
 
   protected void bookForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
-    for (int i = node.getMoveNo(); i < (node.getMoveNo() + length); i++) {
+    for (int i = node.getMoveNo()-1; i < (node.getMoveNo() + length); i++) {
       levelList.set(i, 1);
     }
   }
 
   protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
+    // if the row is not initialized yet then lets fill with 0s
     if (levelList.size() <= node.getMoveNo()) {
       for (int i = levelList.size(); i <= node.getMoveNo() + length; i++) {
         levelList.add(i, 0);
       }
     }
 
-    Integer marker = levelList.get(node.getMoveNo());
+    // we'll start the search one move earlier as we also
+    // want to show to "glue stone"
+    Integer marker = levelList.get(node.getMoveNo()-1);
 
     // marker exists, now lets see if available for the whole length
     if (marker == 0) {
-      for (int i = node.getMoveNo(); i < node.getMoveNo() + length; i++) {
+      for (int i = node.getMoveNo()-1; i < node.getMoveNo() + length; i++) {
         Integer localMarker = levelList.get(i);
         if (localMarker == 1) {
           return false;
