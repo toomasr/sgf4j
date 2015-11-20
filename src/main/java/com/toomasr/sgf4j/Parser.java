@@ -96,6 +96,8 @@ public class Parser {
     nodeProps.add("CR");
     // marks given points with cross
     nodeProps.add("MA");
+    // marks given points with square
+    nodeProps.add("SQ");
     // selected points
     nodeProps.add("SL");
     // labels on points
