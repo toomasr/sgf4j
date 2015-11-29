@@ -24,6 +24,21 @@ public class VirtualBoard {
       }
     }
   }
+  
+  public void makeMove(GameNode move, GameNode prevMove) {
+    int x = move.getCoords()[0];
+    int y = move.getCoords()[1];
+
+    this.vBoard[x][y] = new Square(move.getColorAsEnum(), x, y);
+    
+    Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
+    moveToRemovedGroups.put(move, removedGroups);
+    // place the stone on the board
+    placeStone(move);
+    
+    // play the move fully out with all the bells and whistles
+    playMove(move, prevMove);
+  }
 
   public void placeStone(StoneState color, int x, int y) {
     this.vBoard[x][y] = new Square(color, x, y);
@@ -33,16 +48,10 @@ public class VirtualBoard {
     }
   }
 
-  public void playMove(GameNode node, GameNode prevMove) {
-    int x = node.getCoords()[0];
-    int y = node.getCoords()[1];
-
-    this.vBoard[x][y] = new Square(node.getColorAsEnum(), x, y);
-    placeStone(node);
-
+  public void playMove(GameNode move, GameNode prevMove) {
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
       BoardListener boardListener = ite.next();
-      boardListener.playMove(node, prevMove);
+      boardListener.playMove(move, prevMove);
     }
   }
 
@@ -184,7 +193,7 @@ public class VirtualBoard {
     // the fwdTo could be an element in one of the child nodes
     // it is really difficult to find if we start from the rootNode
     // so lets start from the node itself, go backwards until we
-    // find the rootnode and later on play all the moves until that point
+    // find the root node and later on play all the moves until that point
     List<GameNode> movesToPlay = new ArrayList<>();
     GameNode node = fwdTo;
     do {
@@ -197,6 +206,7 @@ public class VirtualBoard {
     // now lets play the moves
     for (int i = movesToPlay.size() - 1; i > -1; i--) {
       node = movesToPlay.get(i);
+      placeStone(node);
       playMove(node, prevMove);
       Set<Group> removedGroups = removeDeadGroupsForOppColor(fwdTo.getColorAsEnum());
       moveToRemovedGroups.put(fwdTo, removedGroups);
@@ -211,12 +221,6 @@ public class VirtualBoard {
 
   public void addBoardListener(BoardListener listener) {
     this.boardListeners.add(listener);
-  }
-
-  public void makeMove(GameNode move, GameNode prevMove) {
-    Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
-    moveToRemovedGroups.put(move, removedGroups);
-    playMove(move, prevMove);
   }
 
   public void undoMove(GameNode moveNode, GameNode prevMove) {
