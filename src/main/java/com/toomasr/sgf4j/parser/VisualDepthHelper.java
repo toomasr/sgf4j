@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Precomputes the visual depth for the game nodes. The visual
+ * Computes the visual depth for the game nodes. The visual
  * depth designates as how deep in the tree should the line be
  * shown if a GUI is being used. I should move this helper to
  * sgf4j-gui project but haven't done it yet.
@@ -30,12 +30,14 @@ public class VisualDepthHelper {
   }
 
   private void initializeMainLine(GameNode lastNode, List<List<Integer>> depthMatrix) {
+    // initialize the first line with 0s
     List<Integer> firstLine = new ArrayList<>();
     for (int i = 0; i <= lastNode.getMoveNo(); i++) {
       firstLine.add(i, 0);
     }
     depthMatrix.add(0, firstLine);
 
+    // initialize the first line actual moves with 1s 
     GameNode node = lastNode;
     do {
       if (node.isMove()) {
@@ -46,8 +48,13 @@ public class VisualDepthHelper {
   }
 
   private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix) {
-
     do {
+      // deal with the node
+      
+//      int visualDepth = findVisualDepthForNode(node, depthMatrix);
+//      setVisualDepthForLine(node, visualDepth + 1);
+      
+      // deal with the children
       if (node.hasChildren()) {
         for (Iterator<GameNode> ite = node.getChildren().iterator(); ite.hasNext();) {
           GameNode child = ite.next();
@@ -70,7 +77,8 @@ public class VisualDepthHelper {
   }
 
   protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix) {
-    int length = findLengthAtDepth(node);
+    int length = findLengthOfLine(node);
+    
     // little point in searching on the 0th row
     // which is taken up by the main line
     int depthDelta = 1;
@@ -133,13 +141,13 @@ public class VisualDepthHelper {
     }
   }
 
-  protected int findLengthAtDepth(GameNode rootNode) {
-    GameNode node = rootNode;
+  protected int findLengthOfLine(final GameNode node) {
+    GameNode tmpNode = node;
     int i = 0;
     do {
       i++;
     }
-    while ((node = node.getNextNode()) != null);
+    while ((tmpNode = tmpNode.getNextNode()) != null);
     return i;
   }
 }
