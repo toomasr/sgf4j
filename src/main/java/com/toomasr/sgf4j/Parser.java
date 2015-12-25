@@ -83,6 +83,9 @@ public class Parser {
     generalProps.add("KGSSW");
     // KGS - score black
     generalProps.add("KGSSB");
+    // Checkmark - ignored in FF4
+    // http://www.red-bean.com/sgf/ff1_3/ff3.html and http://www.red-bean.com/sgf/changes.html
+    generalProps.add("CH");
   }
 
   private static final Set<String> nodeProps = new HashSet<String>();
@@ -117,7 +120,7 @@ public class Parser {
     /*
      * List of points - http://www.red-bean.com/sgf/proplist_ff.html
      * Label the given points with uppercase letters. Not used in FF 3 and FF 4!
-     * 
+     *
      * Replaced by LB which defines the letters also:
      * Example: L[fg][es][jk] -> LB[fg:A][es:B][jk:C]
      */
