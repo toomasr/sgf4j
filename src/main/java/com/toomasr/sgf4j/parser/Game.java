@@ -1,6 +1,7 @@
 package com.toomasr.sgf4j.parser;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Game {
@@ -38,21 +39,45 @@ public class Game {
   }
 
   public void postProcess() {
-    // count the moves
+    // count the moves & nodes
     GameNode node = getRootNode();
     do {
       if (node.isMove()) {
-        setNoMoves(getNoMoves() + 1);
+        noMoves++;
       }
       noNodes++;
     }
     while (((node = node.getNextNode()) != null));
-    
+
+    // number all the moves
+    numberTheMoves(getRootNode(), 1);
+
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
     helper.calculateVisualDepth(getLastMove());
   }
-  
+
+  private void numberTheMoves(GameNode startNode, int moveNo) {
+    GameNode node = startNode;
+    int nextMoveNo = moveNo;
+
+    if (node.isMove()) {
+      startNode.setMoveNo(moveNo);
+      nextMoveNo++;
+    }
+
+    if (node.getNextNode() != null) {
+      numberTheMoves(node.getNextNode(), nextMoveNo);
+    }
+
+    if (node.hasChildren()) {
+      for (Iterator<GameNode> ite = node.getChildren().iterator(); ite.hasNext();) {
+        GameNode childNode = ite.next();
+        numberTheMoves(childNode, nextMoveNo);
+      }
+    }
+  }
+
   public int getNoNodes() {
     return noNodes;
   }
