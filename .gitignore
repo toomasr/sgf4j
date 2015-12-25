@@ -3,6 +3,6 @@ target
 .project
 .settings
 .DS_Store
-src/main/java/com/toomasr/sgf4j/example
+src/main/java/com/toomasr/sgf4j/tmp
 .hg
 .hgignore
