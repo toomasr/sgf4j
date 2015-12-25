@@ -12,7 +12,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private final Set<GameNode> children = new TreeSet<GameNode>();
   private final Map<String, String> properties = new HashMap<String, String>();
 
-  private int moveNo;
+  private int moveNo = -1;
   private int visualDepth = 0;
   private GameNode nextNode = null;
   private GameNode prevNode = null;
@@ -115,6 +115,12 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public int getMoveNo() {
     return moveNo;
+  }
+  
+  public boolean isEmpty() {
+    if (properties.isEmpty() && children.size() == 0)
+      return true;
+    return false;
   }
 
   @Override

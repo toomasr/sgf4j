@@ -154,7 +154,7 @@ public class Parser {
           parentNode = node;
           game.setRootNode(parentNode);
         }
-        else {
+        else if (!node.isEmpty()) {
           parentNode.addChild(node);
           parentNode = node;
         }
