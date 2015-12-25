@@ -11,7 +11,7 @@ public class Util {
       , "E", "F", "G", "H", "J"
       , "K", "L", "M", "N", "O"
       ,"P", "Q", "R", "S", "T" };
-  
+
   public static final Map<String, Integer> alphaToCoord = new HashMap<String, Integer>(){{
     put("a", 0);
     put("b", 1);
@@ -53,5 +53,18 @@ public class Util {
       throw new RuntimeException("Coordinate cannot be less than 2 characters. Input '" + input + "'");
     }
     return new int[] { alphaToCoord.get(input.charAt(0) + ""), alphaToCoord.get(input.charAt(1) + "") };
+  }
+
+  public static Map<String, String> extractLabels(String str) {
+    HashMap<String, String> rtrn = new HashMap<String, String>();
+    // the LB property comes like 'fb:A][gb:C][jd:B
+    if (str == null)
+      return rtrn;
+    String[] labels = str.split("\\]\\[");
+    for (int i = 0; i < labels.length; i++) {
+      String[] label = labels[i].split(":");
+      rtrn.put(label[0], label[1]);
+    }
+    return rtrn;
   }
 }

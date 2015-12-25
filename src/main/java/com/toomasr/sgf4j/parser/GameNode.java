@@ -19,7 +19,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   /**
    * Constructs a new node with the argument as the parent.
-   * 
+   *
    * @param parentNode node to be the parent of the just created node.
    */
   public GameNode(GameNode parentNode) {
@@ -106,7 +106,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   }
 
   public String toString() {
-    return "Props: " + properties.toString() + " moveNo: " + moveNo + " children: " + children.size() + " vdepth: " + visualDepth;
+    return "Props: keys=" + properties.keySet().toString()+ " all=" + properties.toString() + " moveNo: " + moveNo + " children: " + children.size() + " vdepth: " + visualDepth;
   }
 
   public void setMoveNo(int i) {
@@ -116,7 +116,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public int getMoveNo() {
     return moveNo;
   }
-  
+
   public boolean isEmpty() {
     if (properties.isEmpty() && children.size() == 0)
       return true;
