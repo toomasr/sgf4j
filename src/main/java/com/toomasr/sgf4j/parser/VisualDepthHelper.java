@@ -19,14 +19,24 @@ public class VisualDepthHelper {
     if (lastNode == null) {
       return;
     }
-    
+
     // a XyZ matrix that we'll fill with 1s and 0s based
     // on whether a square is occupied or not
     List<List<Integer>> depthMatrix = new ArrayList<>();
 
     initializeMainLine(lastNode, depthMatrix);
-    
-    calculateVisualDepthFor(lastNode, depthMatrix);
+
+    GameNode activeNode = lastNode;
+    do {
+      if (activeNode.hasChildren()) {
+        for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
+          // the do/while iterates over the main line that has depth 1
+          // all other branches have to be at least depth 2
+          calculateVisualDepthFor(ite.next(), depthMatrix, 2);
+        }
+      }
+    }
+    while ((activeNode = activeNode.getPrevNode()) != null);
   }
 
   private void initializeMainLine(GameNode lastNode, List<List<Integer>> depthMatrix) {
@@ -37,35 +47,30 @@ public class VisualDepthHelper {
     }
     depthMatrix.add(0, firstLine);
 
-    // initialize the first line actual moves with 1s 
+    // initialize the first line actual moves with 1s
     GameNode node = lastNode;
     do {
       if (node.isMove()) {
         firstLine.set(node.getMoveNo(), 1);
+        // main line will be at depth 0
+        node.setVisualDepth(0);
       }
     }
     while ((node = node.getPrevNode()) != null);
   }
 
-  private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix) {
-    do {
-      // deal with the node
-      
-//      int visualDepth = findVisualDepthForNode(node, depthMatrix);
-//      setVisualDepthForLine(node, visualDepth + 1);
-      
-      // deal with the children
-      if (node.hasChildren()) {
-        for (Iterator<GameNode> ite = node.getChildren().iterator(); ite.hasNext();) {
-          GameNode child = ite.next();
+  private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
+    int visualDepth = findVisualDepthForNode(node, depthMatrix, minDepth);
+    setVisualDepthForLine(node, visualDepth);
 
-          int visualDepth = findVisualDepthForNode(child, depthMatrix);
-          setVisualDepthForLine(child, visualDepth + 1);
-          calculateVisualDepthFor(child, depthMatrix);
+    GameNode activeNode = node;
+    do {
+      if (activeNode.hasChildren()) {
+        for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
+          calculateVisualDepthFor(ite.next(), depthMatrix, minDepth);
         }
       }
-    }
-    while ((node = node.getPrevNode()) != null);
+    } while ((activeNode = activeNode.getNextNode()) != null);
   }
 
   protected void setVisualDepthForLine(GameNode child, int depth) {
@@ -76,12 +81,11 @@ public class VisualDepthHelper {
     while ((node = node.getNextNode()) != null);
   }
 
-  protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix) {
+  protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
     int length = findLengthOfLine(node);
-    
-    // little point in searching on the 0th row
-    // which is taken up by the main line
-    int depthDelta = 1;
+
+    int depthDelta = minDepth;
+
     do {
       // init the matrix at this depth if not yet done
       if (depthMatrix.size() <= depthDelta) {
@@ -93,7 +97,7 @@ public class VisualDepthHelper {
       List<Integer> levelList = depthMatrix.get(depthDelta);
 
       boolean available = isAvailableForLineOfPlay(node, length, levelList);
-      
+
       if (available) {
         bookForLineOfPlay(node, length, levelList);
         break;
@@ -109,7 +113,7 @@ public class VisualDepthHelper {
   }
 
   protected void bookForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
-    for (int i = node.getMoveNo()-1; i < (node.getMoveNo() + length); i++) {
+    for (int i = node.getMoveNo() - 1; i < (node.getMoveNo() + length); i++) {
       levelList.set(i, 1);
     }
   }
@@ -124,11 +128,11 @@ public class VisualDepthHelper {
 
     // we'll start the search one move earlier as we also
     // want to show to "glue stone"
-    Integer marker = levelList.get(node.getMoveNo()-1);
+    Integer marker = levelList.get(node.getMoveNo() - 1);
 
     // marker exists, now lets see if available for the whole length
     if (marker == 0) {
-      for (int i = node.getMoveNo()-1; i < node.getMoveNo() + length; i++) {
+      for (int i = node.getMoveNo() - 1; i < node.getMoveNo() + length; i++) {
         Integer localMarker = levelList.get(i);
         if (localMarker == 1) {
           return false;
@@ -141,6 +145,13 @@ public class VisualDepthHelper {
     }
   }
 
+  /**
+   * Returns the length of this game line. This is the length with
+   * no branch taken into account except the main line for this branch.
+   *
+   * @param node
+   * @return
+   */
   protected int findLengthOfLine(final GameNode node) {
     GameNode tmpNode = node;
     int i = 0;

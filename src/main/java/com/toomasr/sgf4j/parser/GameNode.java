@@ -13,7 +13,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private final Map<String, String> properties = new HashMap<String, String>();
 
   private int moveNo = -1;
-  private int visualDepth = 0;
+  private int visualDepth = -1;
   private GameNode nextNode = null;
   private GameNode prevNode = null;
 
