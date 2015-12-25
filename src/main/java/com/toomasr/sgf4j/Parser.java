@@ -28,9 +28,9 @@ public class Parser {
     generalProps.add("WR");
     // KOMI
     generalProps.add("KM");
-    // Black Player
+    // Black Player name
     generalProps.add("PB");
-    // Black Player
+    // White Player name
     generalProps.add("PW");
     // Charset
     generalProps.add("CA");
