@@ -1,7 +1,10 @@
 package com.toomasr.sgf4j;
 
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -31,9 +34,24 @@ public class Sgf {
   }
 
   public static Game createFromString(String gameAsString) {
-    Sgf rtrn = null;
-    rtrn = new Sgf(gameAsString);
+    Sgf rtrn = new Sgf(gameAsString);
     return rtrn.getGame();
+  }
+
+  public static Game createFromInputStream(InputStream in) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+      StringBuilder out = new StringBuilder();
+      String line;
+      while ((line = reader.readLine()) != null) {
+        out.append(line);
+      }
+      Sgf rtrn = new Sgf(out.toString());
+      return rtrn.getGame();
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
   }
 
   public static void writeToFile(Game game, Path destination) throws Exception {
