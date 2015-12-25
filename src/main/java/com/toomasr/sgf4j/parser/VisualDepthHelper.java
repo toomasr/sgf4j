@@ -30,9 +30,9 @@ public class VisualDepthHelper {
     do {
       if (activeNode.hasChildren()) {
         for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
-          // the do/while iterates over the main line that has depth 1
-          // all other branches have to be at least depth 2
-          calculateVisualDepthFor(ite.next(), depthMatrix, 2);
+          // the do/while iterates over the main line that has depth 0
+          // all other branches have to be at least depth 1
+          calculateVisualDepthFor(ite.next(), depthMatrix, 1);
         }
       }
     }
@@ -70,7 +70,8 @@ public class VisualDepthHelper {
           calculateVisualDepthFor(ite.next(), depthMatrix, minDepth);
         }
       }
-    } while ((activeNode = activeNode.getNextNode()) != null);
+    }
+    while ((activeNode = activeNode.getNextNode()) != null);
   }
 
   protected void setVisualDepthForLine(GameNode child, int depth) {
@@ -137,19 +138,13 @@ public class VisualDepthHelper {
       marker = levelList.get(node.getMoveNo() - 1);
     }
 
-    // marker exists, now lets see if available for the whole length
-    if (marker == 0) {
-      for (int i = marker; i < node.getMoveNo() + length; i++) {
-        Integer localMarker = levelList.get(i);
-        if (localMarker == 1) {
-          return false;
-        }
+    for (int i = marker; i < node.getMoveNo() + length; i++) {
+      Integer localMarker = levelList.get(i);
+      if (localMarker == 1) {
+        return false;
       }
-      return true;
     }
-    else {
-      return false;
-    }
+    return true;
   }
 
   /**
