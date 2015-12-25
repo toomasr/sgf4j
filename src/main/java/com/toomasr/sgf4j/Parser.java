@@ -28,10 +28,16 @@ public class Parser {
     generalProps.add("WR");
     // KOMI
     generalProps.add("KM");
+    // Black Player Extended information
+    generalProps.add("PBX");
     // Black Player name
     generalProps.add("PB");
     // White Player name
     generalProps.add("PW");
+    // I think - Black Player name
+    generalProps.add("PX");
+    // I think - White Player name
+    generalProps.add("PY");
     // Charset
     generalProps.add("CA");
     // File format
@@ -42,6 +48,13 @@ public class Parser {
     generalProps.add("SZ");
     // Annotator
     generalProps.add("AN");
+    // Name of the event
+    generalProps.add("EV");
+    // Name of the event extended
+    // Extended info about the event
+    generalProps.add("EVX");
+    // Rount number
+    generalProps.add("RO");
     // Rules
     generalProps.add("RU");
     // Time limit in seconds
@@ -50,12 +63,32 @@ public class Parser {
     generalProps.add("OT");
     // Date of the game
     generalProps.add("DT");
+    // Extended date
+    generalProps.add("DTX");
     // Place of the game
     generalProps.add("PC");
     // Result of the game
     generalProps.add("RE");
+    // I think - Result of the game
+    generalProps.add("ER");
     // How to show comments
     generalProps.add("ST");
+    /*
+     * Provides some extra information about the following game.
+     * The intend of GC is to provide some background information
+     * and/or to summarize the game itself.
+    */
+    generalProps.add("GC");
+    // Any copyright information
+    generalProps.add("CP");
+    // Provides name of the source
+    generalProps.add("SO");
+    // Name of the white team
+    generalProps.add("WT");
+    // Name of the black team
+    generalProps.add("BT");
+    // name of the user or program who entered the game
+    generalProps.add("US");
     // How to print move numbers
     generalProps.add("PM");
     // Some more printing magic
@@ -66,6 +99,11 @@ public class Parser {
     generalProps.add("TB");
     // White territory or area
     generalProps.add("TW");
+    // Sets the move number to the given value, i.e. a move
+    // specified in this node has exactly this move-number. This
+    // can be useful for variations or printing.
+    // SGF4J doesn't honour this atm
+    generalProps.add("MN");
     // Handicap stones
     generalProps.add("HA");
     // "AB": add black stones AB[point list]
@@ -86,6 +124,24 @@ public class Parser {
     // Checkmark - ignored in FF4
     // http://www.red-bean.com/sgf/ff1_3/ff3.html and http://www.red-bean.com/sgf/changes.html
     generalProps.add("CH");
+    // I think this is White Country
+    generalProps.add("WC");
+    // "LT": enforces losing on time LT[]
+    // http://www.red-bean.com/sgf/ff1_3/ff3.html
+    // I don't get it but I'm parsing it
+    generalProps.add("LT");
+    // I think this is Black Country
+    generalProps.add("BC");
+    // I think this is just a game ID
+    generalProps.add("ID");
+    // I have no idea what these properties means
+    // but they are in many games of the collections
+    // I've downloaded from the interwebs
+    generalProps.add("OH");
+    generalProps.add("LC");
+    generalProps.add("RD"); // maybe release date?
+    generalProps.add("TL"); // something to do with time
+    generalProps.add("GK"); // something to do with the game
   }
 
   private static final Set<String> nodeProps = new HashSet<String>();
@@ -117,6 +173,11 @@ public class Parser {
     nodeProps.add("BL");
     // Comment
     nodeProps.add("C");
+    /*
+     * Provides a name for the node. For more info have a look at
+     * the C-property.
+     */
+    nodeProps.add("N");
     /*
      * List of points - http://www.red-bean.com/sgf/proplist_ff.html
      * Label the given points with uppercase letters. Not used in FF 3 and FF 4!
@@ -241,8 +302,8 @@ public class Parser {
         log.debug("Not handling " + key + " = " + value);
       }
       else {
-        throw new SgfParseException(
-            "Ignoring property '" + m.group(1) + "'=" + m.group(2) + " Found it from '" + m.group(0) + "'");
+        //log.error("Not able to parse property '" + m.group(1) + "'=" + m.group(2) + ". Found it from " + m.group(0));
+        throw new SgfParseException("Ignoring property '" + m.group(1) + "'=" + m.group(2) + " Found it from '" + m.group(0) + "'");
       }
     }
 
