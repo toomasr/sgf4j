@@ -134,7 +134,7 @@ public class VisualDepthHelper {
     // we'll start the search one move earlier as we also
     // want to show to "glue stone"
     Integer marker = 0;
-    if (node.getMoveNo() != 0) {
+    if (node.getMoveNo() > 1) {
       marker = levelList.get(node.getMoveNo() - 1);
     }
 
