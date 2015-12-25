@@ -113,7 +113,11 @@ public class VisualDepthHelper {
   }
 
   protected void bookForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
-    for (int i = node.getMoveNo() - 1; i < (node.getMoveNo() + length); i++) {
+    int start = 0;
+    if (node.getMoveNo() > 0) {
+      start = node.getMoveNo() - 1;
+    }
+    for (int i = start; i < (node.getMoveNo() + length); i++) {
       levelList.set(i, 1);
     }
   }
@@ -128,11 +132,14 @@ public class VisualDepthHelper {
 
     // we'll start the search one move earlier as we also
     // want to show to "glue stone"
-    Integer marker = levelList.get(node.getMoveNo() - 1);
+    Integer marker = 0;
+    if (node.getMoveNo() != 0) {
+      marker = levelList.get(node.getMoveNo() - 1);
+    }
 
     // marker exists, now lets see if available for the whole length
     if (marker == 0) {
-      for (int i = node.getMoveNo() - 1; i < node.getMoveNo() + length; i++) {
+      for (int i = marker; i < node.getMoveNo() + length; i++) {
         Integer localMarker = levelList.get(i);
         if (localMarker == 1) {
           return false;
