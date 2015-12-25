@@ -7,6 +7,7 @@ public class Game {
   private Map<String, String> properties = new HashMap<String, String>();
   private GameNode rootNode;
   private int noMoves = 0;
+  private int noNodes = 0;
 
   public void addProperty(String key, String value) {
     properties.put(key, value);
@@ -43,12 +44,17 @@ public class Game {
       if (node.isMove()) {
         setNoMoves(getNoMoves() + 1);
       }
+      noNodes++;
     }
     while (((node = node.getNextNode()) != null));
-
+    
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
     helper.calculateVisualDepth(getLastMove());
+  }
+  
+  public int getNoNodes() {
+    return noNodes;
   }
 
   public GameNode getFirstMove() {
