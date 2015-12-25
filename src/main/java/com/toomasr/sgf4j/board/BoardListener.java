@@ -7,4 +7,5 @@ public interface BoardListener {
   void removeStone(int x, int y);
   void playMove(GameNode node, GameNode prevMove);
   void undoMove(GameNode currentMove, GameNode prevMove);
+  void initInitialPosition();
 }

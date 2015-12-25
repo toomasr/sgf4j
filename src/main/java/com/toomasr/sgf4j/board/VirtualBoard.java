@@ -18,6 +18,10 @@ public class VirtualBoard {
   private Map<GameNode, Set<Group>> moveToRemovedGroups = new HashMap<>();
 
   public VirtualBoard() {
+    initEmptyBoard();
+  }
+
+  private void initEmptyBoard() {
     for (int i = 0; i < vBoard.length; i++) {
       for (int j = 0; j < vBoard.length; j++) {
         vBoard[i][j] = new Square(StoneState.EMPTY, i, j);
@@ -59,8 +63,15 @@ public class VirtualBoard {
     placeStone(sq.getColor(), sq.x, sq.y);
   }
 
-  public void placeStone(GameNode node) {
-    placeStone(node.getColorAsEnum(), node.getCoords()[0], node.getCoords()[1]);
+  /**
+   * Place a stone on the board. No dead group
+   * handling or nothing. This is good to put
+   * stones on the board for any starting position.
+   * 
+   * @param gameNode the node to place
+   */
+  public void placeStone(GameNode gameNode) {
+    placeStone(gameNode.getColorAsEnum(), gameNode.getCoords()[0], gameNode.getCoords()[1]);
   }
 
   public void placeWhiteStone(int i, int j) {
@@ -124,6 +135,10 @@ public class VirtualBoard {
     return groups;
   }
 
+  /*
+   * Starts from a node and then finds all the connected stones with this group.
+   * Basically populates by starting from a single node.
+   */
   private void populateGroup(int i, int j, StoneState color, Group activeGroup) {
     if (vBoard[i][j].isOfColor(color) && !activeGroup.contains(vBoard[i][j])) {
       activeGroup.addStone(vBoard[i][j]);
@@ -139,20 +154,6 @@ public class VirtualBoard {
     else {
       return;
     }
-  }
-
-  private boolean isDead(int i, int j, StoneState color) {
-    if (color.equals(StoneState.EMPTY)) {
-      return false;
-    }
-
-    if ((j + 1 >= size) || vBoard[i][j + 1].isOfColor(oppColor(color))) {
-      if ((i + 1 >= size) || vBoard[i + 1][j].isOfColor(oppColor(color))) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   public StoneState oppColor(StoneState color) {
@@ -197,19 +198,24 @@ public class VirtualBoard {
     List<GameNode> movesToPlay = new ArrayList<>();
     GameNode node = fwdTo;
     do {
-      if (node.isMove())
+      if (node.isMove()) {
         movesToPlay.add(node);
+      }
     }
     while ((node = node.getParentNode()) != null);
 
+    initEmptyBoard();
+    
+    for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
+      BoardListener boardListener = ite.next();
+      boardListener.initInitialPosition();
+    }
+    
     GameNode prevMove = null;
-    // now lets play the moves
+    // now lets re-play the moves
     for (int i = movesToPlay.size() - 1; i > -1; i--) {
       node = movesToPlay.get(i);
-      placeStone(node);
-      playMove(node, prevMove);
-      Set<Group> removedGroups = removeDeadGroupsForOppColor(fwdTo.getColorAsEnum());
-      moveToRemovedGroups.put(fwdTo, removedGroups);
+      makeMove(node, prevMove);
       
       prevMove = node;
     }
