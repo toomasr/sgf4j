@@ -4,6 +4,33 @@
   <groupId>com.toomasr</groupId>
   <artifactId>sgf4j-parser</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <scm>
+    <connection>scm:git:git@github.com:toomasr/sgf4j.git</connection>
+    <url>scm:git:git@github.com:toomasr/sgf4j.git</url>
+    <developerConnection>scm:git:git@github.com:toomasr/sgf4j.git</developerConnection>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype OSS Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype OSS Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -40,4 +67,24 @@
       </plugin>
     </plugins>
   </build>
+
+  <url>https://github.com/toomasr/sgf4j</url>
+  <description>Parse SGF files in Java.</description>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>toomasr</id>
+      <name>Toomas</name>
+      <email>toomasr@gmail.com</email>
+      <url>http://twitter.com/toomasr</url>
+    </developer>
+  </developers>
+
 </project>
