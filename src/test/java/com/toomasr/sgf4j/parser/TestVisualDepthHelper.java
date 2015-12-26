@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.toomasr.sgf4j.Parser;
@@ -47,12 +48,12 @@ public class TestVisualDepthHelper extends TestCase {
   @Test
   public void testBookForLineOfPlay() throws Exception {
     helper.bookForLineOfPlay(firstChild, 2, nodeMarkerList);
-    
-    assertTrue(0 == nodeMarkerList.get(0));
-    assertTrue(0 == nodeMarkerList.get(1));
-    assertTrue(1 == nodeMarkerList.get(2));
-    assertTrue(1 == nodeMarkerList.get(3));
-    assertTrue(0 == nodeMarkerList.get(4));
+
+    Assert.assertEquals(0, (int) nodeMarkerList.get(0));
+    Assert.assertEquals(1, (int) nodeMarkerList.get(1));
+    Assert.assertEquals(1, (int) nodeMarkerList.get(2));
+    Assert.assertEquals(1, (int) nodeMarkerList.get(3));
+    Assert.assertEquals(0, (int) nodeMarkerList.get(4));
   }
 
   @Test
@@ -86,8 +87,8 @@ public class TestVisualDepthHelper extends TestCase {
   public void testCalculateVisualDepth() {
     helper.calculateVisualDepth(simpleBranchingGame.getLastMove());
 
-    assertEquals(2, firstChild.getVisualDepth());
-    assertEquals(3, secondChild.getVisualDepth());
+    assertEquals(1, firstChild.getVisualDepth());
+    assertEquals(2, secondChild.getVisualDepth());
   }
 
   @Test
@@ -100,11 +101,11 @@ public class TestVisualDepthHelper extends TestCase {
     GameNode firstChild = ite.next();
     GameNode secondChild = ite.next();
 
-    assertEquals(2, firstChild.getVisualDepth());
-    assertEquals(3, firstChild.getChildren().iterator().next().getVisualDepth());
-    assertEquals(3, firstChild.getChildren().iterator().next().getNextNode().getVisualDepth());
+    assertEquals(1, firstChild.getVisualDepth());
+    assertEquals(2, firstChild.getChildren().iterator().next().getVisualDepth());
+    assertEquals(2, firstChild.getChildren().iterator().next().getNextNode().getVisualDepth());
 
-    assertEquals(4, secondChild.getVisualDepth());
-    assertEquals(5, secondChild.getChildren().iterator().next().getVisualDepth());
+    assertEquals(3, secondChild.getVisualDepth());
+    assertEquals(4, secondChild.getChildren().iterator().next().getVisualDepth());
   }
 }
