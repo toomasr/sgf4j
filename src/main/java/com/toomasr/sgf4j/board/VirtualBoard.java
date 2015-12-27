@@ -28,18 +28,20 @@ public class VirtualBoard {
       }
     }
   }
-  
+
   public void makeMove(GameNode move, GameNode prevMove) {
     int x = move.getCoords()[0];
     int y = move.getCoords()[1];
 
-    this.vBoard[x][y] = new Square(move.getColorAsEnum(), x, y);
-    
-    Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
-    moveToRemovedGroups.put(move, removedGroups);
-    // place the stone on the board
-    placeStone(move);
-    
+    // only if the move is not a pass
+    if (!move.isPass()) {
+      this.vBoard[x][y] = new Square(move.getColorAsEnum(), x, y);
+      Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
+      moveToRemovedGroups.put(move, removedGroups);
+      // place the stone on the board
+      placeStone(move);
+    }
+
     // play the move fully out with all the bells and whistles
     playMove(move, prevMove);
   }
@@ -67,7 +69,7 @@ public class VirtualBoard {
    * Place a stone on the board. No dead group
    * handling or nothing. This is good to put
    * stones on the board for any starting position.
-   * 
+   *
    * @param gameNode the node to place
    */
   public void placeStone(GameNode gameNode) {
@@ -205,18 +207,18 @@ public class VirtualBoard {
     while ((node = node.getParentNode()) != null);
 
     initEmptyBoard();
-    
+
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
       BoardListener boardListener = ite.next();
       boardListener.initInitialPosition();
     }
-    
+
     GameNode prevMove = null;
     // now lets re-play the moves
     for (int i = movesToPlay.size() - 1; i > -1; i--) {
       node = movesToPlay.get(i);
       makeMove(node, prevMove);
-      
+
       prevMove = node;
     }
   }
@@ -230,9 +232,11 @@ public class VirtualBoard {
   }
 
   public void undoMove(GameNode moveNode, GameNode prevMove) {
-    String currMoveStr = moveNode.getMoveString();
-    int[] moveCoords = Util.alphaToCoords(currMoveStr);
-    removeStone(moveCoords[0], moveCoords[1]);
+    if (!moveNode.isPass()) {
+      String currMoveStr = moveNode.getMoveString();
+      int[] moveCoords = Util.alphaToCoords(currMoveStr);
+      removeStone(moveCoords[0], moveCoords[1]);
+    }
 
     // if the move that we are taking back happened to remove
     // stones on the board and now the move is undone we need

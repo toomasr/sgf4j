@@ -213,4 +213,14 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public void setPrevNode(GameNode node) {
     this.prevNode = node;
   }
+
+  public boolean isPass() {
+    // tt means a pass and actually an empty [] also
+    // but right now not handling that because I don't know
+    // how exactly it looks like in a SGF
+    if ("tt".equals(getMoveString())) {
+      return true;
+    }
+    return false;
+  }
 }
