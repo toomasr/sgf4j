@@ -18,6 +18,15 @@ public class Game {
     return properties.get(key);
   }
 
+  public String getProperty(String key, String defaultValue) {
+    if (properties.get(key) == null) {
+      return defaultValue;
+    }
+    else {
+      return properties.get(key);
+    }
+  }
+
   public String toString() {
     return properties.toString();
   }

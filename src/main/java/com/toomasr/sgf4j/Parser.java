@@ -290,7 +290,14 @@ public class Parser {
         // these come in as a list of coordinates while the first [ is cut off
         // and also the last ], easy to split by ][
         String[] list = value.split("\\]\\[");
-        game.addProperty(key, String.join(",", list));
+        // if the parent node is null then these are
+        // game properties, if not null then the node properties
+        if (parentNode == null) {
+          game.addProperty(key, String.join(",", list));
+        }
+        else {
+          rtrnNode.addProperty(key, String.join(",", list));
+        }
       }
       else if (generalProps.contains(key)) {
         game.addProperty(key, value);

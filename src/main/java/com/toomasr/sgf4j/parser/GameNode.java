@@ -34,6 +34,13 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     return properties.get(key);
   }
 
+  public String getProperty(String key, String defaultValue) {
+    if (properties.get(key) == null)
+      return defaultValue;
+    else
+      return properties.get(key);
+  }
+
   public Map<String, String> getProperties() {
     return properties;
   }
@@ -50,7 +57,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
       return properties.get("B");
     }
     else {
-      throw new RuntimeException();
+      throw new RuntimeException("Unable to extract move from "+properties.toString());
     }
   }
 
