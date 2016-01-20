@@ -57,7 +57,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
       return properties.get("B");
     }
     else {
-      throw new RuntimeException("Unable to extract move from "+properties.toString());
+      throw new RuntimeException("Unable to extract move from " + properties.toString());
     }
   }
 
@@ -113,7 +113,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   }
 
   public String toString() {
-    return "Props: keys=" + properties.keySet().toString()+ " all=" + properties.toString() + " moveNo: " + moveNo + " children: " + children.size() + " vdepth: " + visualDepth;
+    return "Props: keys=" + properties.keySet().toString() + " all=" + properties.toString() + " moveNo: " + moveNo + " children: " + children.size() + " vdepth: " + visualDepth;
   }
 
   public void setMoveNo(int i) {
@@ -225,9 +225,19 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     // tt means a pass and actually an empty [] also
     // but right now not handling that because I don't know
     // how exactly it looks like in a SGF
-    if ("tt".equals(getMoveString())) {
+    if (!isPlacementMove() && "tt".equals(getMoveString())) {
       return true;
     }
     return false;
+  }
+
+  /**
+   * There are moves that actually don't place a stone of a
+   * move but rather a new added position. I call this a placementMove
+   * @return
+   */
+  public boolean isPlacementMove() {
+    return properties.get("W") == null && properties.get("B") == null
+        && (properties.get("AB") != null || properties.get("AW") != null);
   }
 }
