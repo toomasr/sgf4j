@@ -29,6 +29,9 @@ public class TestSaveSgf {
 
     sgfPath = Paths.get("./src/test/resources/problematic-002.sgf");
     verifyGame(sgfPath);
+
+    sgfPath = Paths.get("./src/test/resources/problematic-003.sgf");
+    verifyGame(sgfPath);
   }
 
   @Test
@@ -83,7 +86,6 @@ public class TestSaveSgf {
     try {
       file = File.createTempFile("sgf4j-test-", ".sgf");
       file.deleteOnExit();
-
       game.saveToFile(file.toPath());
     }
     catch (IOException e) {
