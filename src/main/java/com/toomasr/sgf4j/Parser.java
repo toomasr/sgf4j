@@ -299,6 +299,16 @@ public class Parser {
           rtrnNode.addProperty(key, String.join(",", list));
         }
       }
+      else if ("C".equals(key)) {
+        // nodes and the game can have a comment
+        // if parent is null it is a game property
+        if (parentNode == null) {
+          game.addProperty(key, value);
+        }
+        else {
+          rtrnNode.addProperty(key, value);
+        }
+      }
       else if (generalProps.contains(key)) {
         game.addProperty(key, value);
       }
