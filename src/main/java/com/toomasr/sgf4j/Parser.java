@@ -142,6 +142,13 @@ public class Parser {
     generalProps.add("RD"); // maybe release date?
     generalProps.add("TL"); // something to do with time
     generalProps.add("GK"); // something to do with the game
+
+    // These are also available for nodes!
+
+    // time left for white
+    generalProps.add("WL");
+    // time left for black
+    generalProps.add("BL");
   }
 
   private static final Set<String> nodeProps = new HashSet<String>();
