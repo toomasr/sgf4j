@@ -20,6 +20,15 @@ public class Sgf {
   private Sgf(String sgf) {
     parser = new Parser(sgf);
     game = parser.parse();
+
+    /*
+      Empty game results in no nodes
+       - lets create a dummy node in that case
+    */
+    if (game.getRootNode() == null) {
+      game.setRootNode(new GameNode(null));
+    }
+
     game.postProcess();
   }
 

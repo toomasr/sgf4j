@@ -222,8 +222,10 @@ public class Parser {
         }
 
         if (parentNode == null) {
-          parentNode = node;
-          game.setRootNode(parentNode);
+          if (!node.isEmpty()) {
+            parentNode = node;
+            game.setRootNode(parentNode);
+          }
         }
         else if (!node.isEmpty()) {
           parentNode.addChild(node);
