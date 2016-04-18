@@ -234,6 +234,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   /**
    * There are moves that actually don't place a stone of a
    * move but rather a new added position. I call this a placementMove
+   *
    * @return
    */
   public boolean isPlacementMove() {
