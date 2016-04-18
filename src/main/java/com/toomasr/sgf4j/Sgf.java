@@ -54,24 +54,40 @@ public class Sgf {
 
   }
 
-  public static void writeToFile(Game game, Path destination) throws Exception {
-    FileWriter fw = new FileWriter(destination.toFile());
+  public static void writeToFile(Game game, Path destination) {
+    try (
+        FileWriter fw = new FileWriter(destination.toFile())) {
 
-    fw.write("(");
-    GameNode node = game.getRootNode();
-    do {
-      fw.write(";");
-      for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
+      fw.write("(");
+
+      // lets write all the root node properties
+      Map<String, String> props = game.getProperties();
+      if (props.size() > 0) {
+        fw.write(";");
+      }
+
+      for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
         Map.Entry<String, String> entry = ite.next();
         fw.write(entry.getKey() + "[" + entry.getValue() + "]");
       }
-      fw.write("\n");
-      System.out.println(node);
-    }
-    while ((node = node.getNextNode()) != null);
-    fw.write(")");
+      GameNode node = game.getRootNode();
+      do {
+        fw.write(";");
+        for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
+          Map.Entry<String, String> entry = ite.next();
+          fw.write(entry.getKey() + "[" + entry.getValue() + "]");
+        }
+        fw.write("\n");
+        // System.out.println(node);
+      }
+      while ((node = node.getNextNode()) != null);
+      fw.write(")");
 
-    fw.close();
+      fw.close();
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private Game getGame() {
