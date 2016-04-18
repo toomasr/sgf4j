@@ -24,13 +24,26 @@ public class TestSaveSgf {
 
   @Test
   public void testProblematic() throws Exception {
-    Path sgfPath = Paths.get("./src/test/resources/problematic.sgf");
+    Path sgfPath = Paths.get("./src/test/resources/problematic-001.sgf");
+    verifyGame(sgfPath);
+
+    sgfPath = Paths.get("./src/test/resources/problematic-002.sgf");
     verifyGame(sgfPath);
   }
 
   @Test
-  public void testAllGamesFromArchive() {
+  public void testAllGamesFromBadukMoviesArchive() {
+    Path path = Paths.get("src/test/resources/badukmovies-pro-collection.zip");
+    testAllGamesInZipArchive(path);
+  }
+
+  @Test
+  public void testAllGamesFromAebArchive() {
     Path path = Paths.get("src/test/resources/games-aeb-cwi-nl.zip");
+    testAllGamesInZipArchive(path);
+  }
+
+  private void testAllGamesInZipArchive(Path path) {
     ZipUtil.iterate(path.toFile(), new ZipEntryCallback() {
 
       @Override
