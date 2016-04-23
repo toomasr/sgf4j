@@ -308,8 +308,8 @@ public class Parser {
           rtrnNode.addProperty(key, String.join(",", list));
         }
       }
-      else if ("C".equals(key)) {
-        // nodes and the game can have a comment
+      else if ("C".equals(key) || "N".equals(key)) {
+        // nodes and the game can have a comment or name
         // if parent is null it is a game property
         if (parentNode == null) {
           game.addProperty(key, value);
