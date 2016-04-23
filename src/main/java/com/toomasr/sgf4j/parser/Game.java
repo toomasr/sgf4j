@@ -61,6 +61,15 @@ public class Game {
   }
 
   public void postProcess() {
+    // make sure we have a empty first node
+    if (getRootNode().isMove()) {
+      GameNode oldRoot = getRootNode();
+      GameNode newRoot = new GameNode(null);
+
+      newRoot.addChild(oldRoot);
+      setRootNode(newRoot);
+    }
+
     // count the moves & nodes
     GameNode node = getRootNode();
     do {

@@ -77,7 +77,7 @@ public class Parser {
      * Provides some extra information about the following game.
      * The intend of GC is to provide some background information
      * and/or to summarize the game itself.
-    */
+     */
     generalProps.add("GC");
     // Any copyright information
     generalProps.add("CP");
@@ -222,10 +222,8 @@ public class Parser {
         }
 
         if (parentNode == null) {
-          if (!node.isEmpty()) {
-            parentNode = node;
-            game.setRootNode(parentNode);
-          }
+          parentNode = node;
+          game.setRootNode(parentNode);
         }
         else if (!node.isEmpty()) {
           parentNode.addChild(node);
@@ -278,7 +276,7 @@ public class Parser {
   private GameNode parseToken(String token, final GameNode parentNode, Game game) {
     GameNode rtrnNode = new GameNode(parentNode);
     // replace delimiters
-    token = prepareToken("'" + token + "'");
+    token = Parser.prepareToken("'" + token + "'");
 
     // lets find all the properties
     Pattern p = Pattern.compile("([a-zA-Z]{1,})((\\[[^\\]]*\\]){1,})");
@@ -293,6 +291,8 @@ public class Parser {
       if (value.startsWith("[")) {
         value = value.substring(1, value.length() - 1);
       }
+
+      value = Parser.normaliseToken(value);
 
       // these properties require some cleanup
       if ("AB".equals(key) || "AW".equals(key)) {
@@ -328,7 +328,7 @@ public class Parser {
         log.debug("Not handling " + key + " = " + value);
       }
       else {
-        //log.error("Not able to parse property '" + m.group(1) + "'=" + m.group(2) + ". Found it from " + m.group(0));
+        // log.error("Not able to parse property '" + m.group(1) + "'=" + m.group(2) + ". Found it from " + m.group(0));
         throw new SgfParseException("Ignoring property '" + m.group(1) + "'=" + m.group(2) + " Found it from '" + m.group(0) + "'");
       }
     }
@@ -341,9 +341,15 @@ public class Parser {
     return cleaned;
   }
 
-  private String prepareToken(String token) {
+  private static String prepareToken(String token) {
     token = token.replaceAll("\\\\\\[", "@@@@@");
     token = token.replaceAll("\\\\\\]", "#####");
+    return token;
+  }
+
+  public static String normaliseToken(String token) {
+    token = token.replaceAll("@@@@@", "\\\\\\[");
+    token = token.replaceAll("#####", "\\\\\\]");
     return token;
   }
 }

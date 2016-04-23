@@ -8,12 +8,13 @@ import java.util.TreeSet;
 import com.toomasr.sgf4j.board.StoneState;
 
 public class GameNode implements Comparable<GameNode>, Cloneable {
-  private final GameNode parentNode;
   private final Set<GameNode> children = new TreeSet<GameNode>();
   private final Map<String, String> properties = new HashMap<String, String>();
 
   private int moveNo = -1;
   private int visualDepth = -1;
+
+  private GameNode parentNode;
   private GameNode nextNode = null;
   private GameNode prevNode = null;
 
@@ -110,6 +111,10 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public GameNode getParentNode() {
     return parentNode;
+  }
+
+  public void setParentNode(GameNode node) {
+    parentNode = node;
   }
 
   public String toString() {
