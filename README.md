@@ -3,7 +3,7 @@ SGF4J
 
 I've been doing some serious [yak shaving](https://en.wiktionary.org/wiki/yak_shaving). Instead of solving [Go](https://en.wikipedia.org/wiki/Go_(game)) problems to improve my game I've been writing a [SGF](http://www.red-bean.com/sgf/) viewer to make it easier to go through my problem files.
 
-As a side result of that viewer (which I haven't put up yet anywhere) I had to do some SGF parsing. Hence this project. You can use this library to parse SGF files and then actually play it out on a virtual board. The library is not mature, I have tested it with couple of games as I've been writing the viewer.
+As a side result of [that viewer](https://github.com/toomasr/sgf4j-gui) I had to do some SGF parsing. Hence this project. You can use this library to parse SGF files and then actually play it out on a virtual board and then write out the SGF if you want to. I test the library with bunch of databases to make sure it is able to parse enough different SGF files and also when writing those out no data is lost.
 
 Parsing
 =======
@@ -21,3 +21,16 @@ Simple parsing looks like this. You either have a SGF file in a String or a Path
 ```
 
 Remember that not every node is an actual move. Also note that a node might have multiple children. I have built it in a way that `node.getNextMove()` returns the next move in the line while getChildren() will return the rest of the possible next moves.
+
+Writing
+=======
+
+Once you have parsed a file into a Game object you can also write it back to a SGF file.
+
+```
+Game game = Sgf.createFromPath(sgfPath);
+... add/remove/update nodes
+game.saveToFile(Paths.get("/tmp/output.sgf"))
+```
+
+And the game has been serialised into a SGF file.
