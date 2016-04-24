@@ -1,10 +1,14 @@
 package com.toomasr.sgf4j;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -26,7 +30,7 @@ public class Sgf {
 
   public static Game createFromPath(Path path) {
     try {
-      String gameAsString = new String(Files.readAllBytes(path));
+      String gameAsString = new String(Files.readAllBytes(path), "UTF-8");
       return createFromString(gameAsString);
     }
     catch (IOException e) {
@@ -40,7 +44,7 @@ public class Sgf {
   }
 
   public static Game createFromInputStream(InputStream in) {
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8").newDecoder()))) {
       StringBuilder out = new StringBuilder();
       String line;
       while ((line = reader.readLine()) != null) {
@@ -57,37 +61,58 @@ public class Sgf {
 
   public static void writeToFile(Game game, Path destination) {
     try (
-        FileWriter fw = new FileWriter(destination.toFile())) {
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(destination.toFile()), Charset.forName("UTF-8").newEncoder())) {
 
-      fw.write("(");
+      osw.write("(");
 
       // lets write all the root node properties
       Map<String, String> props = game.getProperties();
       if (props.size() > 0) {
-        fw.write(";");
+        osw.write(";");
       }
 
       for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
         Map.Entry<String, String> entry = ite.next();
-        fw.write(entry.getKey() + "[" + entry.getValue() + "]");
+        osw.write(entry.getKey() + "[" + entry.getValue() + "]");
       }
       GameNode node = game.getRootNode();
       do {
-        fw.write(";");
+        osw.write(";");
         for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
           Map.Entry<String, String> entry = ite.next();
-          fw.write(entry.getKey() + "[" + entry.getValue() + "]");
+          osw.write(entry.getKey() + "[" + entry.getValue() + "]");
         }
-        fw.write("\n");
+        osw.write("\n");
         // System.out.println(node);
       }
       while ((node = node.getNextNode()) != null);
-      fw.write(")");
-
-      fw.close();
+      osw.write(")");
     }
     catch (IOException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  public static File writeToFile(String sgf) {
+    BufferedOutputStream bos = null;
+    try {
+      File tmpFile = File.createTempFile("sgf4j-test-", ".sgf");
+      bos = new BufferedOutputStream(new FileOutputStream(tmpFile));
+      bos.write(sgf.getBytes());
+      return tmpFile;
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    finally {
+      if (bos != null) {
+        try {
+          bos.close();
+        }
+        catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      }
     }
   }
 
