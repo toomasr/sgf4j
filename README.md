@@ -27,9 +27,9 @@ Writing
 
 Once you have parsed a file into a Game object you can also write it back to a SGF file.
 
-```
+```java
 Game game = Sgf.createFromPath(sgfPath);
-... add/remove/update nodes
+//... add/remove/update nodes
 game.saveToFile(Paths.get("/tmp/output.sgf"))
 ```
 
