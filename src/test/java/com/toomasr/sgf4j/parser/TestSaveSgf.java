@@ -18,17 +18,26 @@ public class TestSaveSgf {
   }
 
   @Test
-  public void testProblematic() throws Exception {
+  public void testProblematic001() throws Exception {
     Path sgfPath = Paths.get("./src/test/resources/problematic-001.sgf");
     verifyGame(sgfPath);
+  }
 
-    sgfPath = Paths.get("./src/test/resources/problematic-002.sgf");
+  @Test
+  public void testProblematic002() throws Exception {
+    Path sgfPath = Paths.get("./src/test/resources/problematic-002.sgf");
     verifyGame(sgfPath);
+  }
 
-    sgfPath = Paths.get("./src/test/resources/problematic-003.sgf");
+  @Test
+  public void testProblematic003() throws Exception {
+    Path sgfPath = Paths.get("./src/test/resources/problematic-003.sgf");
     verifyGame(sgfPath);
+  }
 
-    sgfPath = Paths.get("./src/test/resources/problematic-004.sgf");
+  @Test
+  public void testProblematic004() throws Exception {
+    Path sgfPath = Paths.get("./src/test/resources/problematic-004.sgf");
     verifyGame(sgfPath);
   }
 
@@ -53,7 +62,10 @@ public class TestSaveSgf {
     }
 
     Game reReadGame = Sgf.createFromPath(file.toPath());
-
-    Assert.assertTrue("Problem with game " + file.getName(), game.isSameGame(reReadGame));
+    boolean result = game.isSameGame(reReadGame);
+    if (!result) {
+      File tmpFile = Sgf.writeToFile(game.getOriginalSgf());
+      Assert.assertTrue("Problem with game. SGF written to " + tmpFile.getAbsolutePath(), result);
+    }
   }
 }

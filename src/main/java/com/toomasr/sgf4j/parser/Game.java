@@ -19,6 +19,16 @@ public class Game {
   private int noMoves = 0;
   private int noNodes = 0;
 
+  // great for debugging
+  private String originalSgf = null;
+
+  public Game() {
+  }
+
+  public Game(String originalSgf) {
+    this.originalSgf = originalSgf;
+  }
+
   public void addProperty(String key, String value) {
     properties.put(key, value);
   }
@@ -214,5 +224,13 @@ public class Game {
     }
 
     return true;
+  }
+
+  public String getOriginalSgf() {
+    return originalSgf;
+  }
+
+  public void setOriginalSgf(String originalSgf) {
+    this.originalSgf = originalSgf;
   }
 }

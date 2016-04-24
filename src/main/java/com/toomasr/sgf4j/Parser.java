@@ -202,7 +202,7 @@ public class Parser {
   }
 
   public Game parse() {
-    Game game = new Game();
+    Game game = new Game(originalGame);
 
     // the root node
     GameNode parentNode = null;
