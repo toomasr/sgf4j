@@ -95,9 +95,9 @@ public class TestVisualDepthHelper extends TestCase {
   public void testCalculateVisualDepthComplex1() {
     helper.calculateVisualDepth(complexBranchingGame.getLastMove());
 
-    GameNode node = complexBranchingGame.getFirstMove();
+    GameNode rootNode = complexBranchingGame.getFirstMove();
 
-    Iterator<GameNode> ite = node.getChildren().iterator();
+    Iterator<GameNode> ite = rootNode.getChildren().iterator();
     GameNode firstChild = ite.next();
     GameNode secondChild = ite.next();
 
@@ -105,7 +105,22 @@ public class TestVisualDepthHelper extends TestCase {
     assertEquals(2, firstChild.getChildren().iterator().next().getVisualDepth());
     assertEquals(2, firstChild.getChildren().iterator().next().getNextNode().getVisualDepth());
 
-    assertEquals(3, secondChild.getVisualDepth());
-    assertEquals(4, secondChild.getChildren().iterator().next().getVisualDepth());
+    assertEquals(2, secondChild.getVisualDepth());
+    assertEquals(3, secondChild.getChildren().iterator().next().getVisualDepth());
+  }
+
+  public void testProblematic005() throws Exception {
+    Path path = Paths.get("./src/test/resources/problematic-005.sgf");
+    String gameAsString = new String(Files.readAllBytes(path));
+    Parser parser = new Parser(gameAsString);
+    Game game = parser.parse();
+    game.postProcess();
+
+    GameNode rootNode = game.getRootNode();
+    GameNode node = rootNode.getChildren().iterator().next();
+    assertEquals(1, node.getVisualDepth());
+    GameNode node2 = node.getNextNode();
+    assertEquals(1, node2.getVisualDepth());
+    assertEquals(2, node2.getChildren().iterator().next().getVisualDepth());
   }
 }

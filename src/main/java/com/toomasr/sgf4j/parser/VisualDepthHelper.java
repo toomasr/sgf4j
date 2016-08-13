@@ -29,10 +29,11 @@ public class VisualDepthHelper {
     GameNode activeNode = lastNode;
     do {
       if (activeNode.hasChildren()) {
+        int i = 1;
         for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
           // the do/while iterates over the main line that has depth 0
           // all other branches have to be at least depth 1
-          calculateVisualDepthFor(ite.next(), depthMatrix, 1);
+          calculateVisualDepthFor(ite.next(), depthMatrix, i++);
         }
       }
     }
@@ -60,18 +61,20 @@ public class VisualDepthHelper {
   }
 
   private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
-    int visualDepth = findVisualDepthForNode(node, depthMatrix, minDepth);
-    setVisualDepthForLine(node, visualDepth);
+    node.setVisualDepth(minDepth);
 
     GameNode activeNode = node;
-    do {
-      if (activeNode.hasChildren()) {
-        for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
-          calculateVisualDepthFor(ite.next(), depthMatrix, minDepth);
-        }
+    // we do breadth first approach
+    while ((activeNode = activeNode.getNextNode()) != null) {
+      calculateVisualDepthFor(activeNode, depthMatrix, minDepth);
+    }
+
+    if (node.hasChildren()) {
+      int visualDepth = findVisualDepthForNode(node, depthMatrix, minDepth);
+      for (Iterator<GameNode> ite = node.getChildren().iterator(); ite.hasNext();) {
+        calculateVisualDepthFor(ite.next(), depthMatrix, visualDepth+1);
       }
     }
-    while ((activeNode = activeNode.getNextNode()) != null);
   }
 
   protected void setVisualDepthForLine(GameNode child, int depth) {
@@ -152,7 +155,7 @@ public class VisualDepthHelper {
    * no branch taken into account except the main line for this branch.
    *
    * @param node
-   * @return
+   * @return no of moves in the main line from this node
    */
   protected int findLengthOfLine(final GameNode node) {
     GameNode tmpNode = node;

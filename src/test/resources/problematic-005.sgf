@@ -1,0 +1,35 @@
+
+(;ST[2]AP[GOWrite:2.3.28]GM[1]CA[UTF-8]FF[4]SZ[19]AB[jc][nc][fe][qp][pj][oq][pd][fc][qb][qc][pe][qf][pf][rg][rh]PB[ ]GN[moyo invade 02 test ピータg]PM[2]FG[259:]PW[ ]AW[dj][dd][dq][jq][do][df][mq][qd][rc][qe][rf][re][rb][qg]C[Problem\: White to play.  ]
+(
+;W[ra]C[Answer for kyu players\:
+This is alive.  ]
+;
+)
+(
+;W[qa]C[Answer for dan players and some strong kyu players\:
+If you can read all the variations and if you are confident that this is alive, w1 is recommended.  w1 reduces the b territory.]
+(
+;B[sd]C[Problem\: White to play.  ]
+(
+;W[sc]C[Answer\:
+]
+;B[sf]
+;W[rd]C[b cannot save bA. ]L[sd]
+)
+(
+;W[rd]C[Mistake\:
+
+Problem\: Black to play.  ]
+;B[ra]C[Answer\:]
+;W[sa]
+;B[sc]C[This is dead.  ]
+)
+
+)
+(
+;B[fg]C[In response to w1, bB is the best response.  But bB is an endgame move and very small at this moment.  b2 is much bigger globally speaking.]L[qa][ob]
+)
+
+)
+
+)
