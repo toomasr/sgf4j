@@ -105,8 +105,8 @@ public class TestVisualDepthHelper extends TestCase {
     assertEquals(2, firstChild.getChildren().iterator().next().getVisualDepth());
     assertEquals(2, firstChild.getChildren().iterator().next().getNextNode().getVisualDepth());
 
-    assertEquals(2, secondChild.getVisualDepth());
-    assertEquals(3, secondChild.getChildren().iterator().next().getVisualDepth());
+    assertEquals(3, secondChild.getVisualDepth());
+    assertEquals(4, secondChild.getChildren().iterator().next().getVisualDepth());
   }
 
   public void testProblematic005() throws Exception {
