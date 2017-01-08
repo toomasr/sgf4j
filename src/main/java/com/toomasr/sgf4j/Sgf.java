@@ -28,6 +28,16 @@ public class Sgf {
     game.postProcess();
   }
 
+  public static Game createFromPath(Path path, String charSet) {
+    try {
+      String gameAsString = new String(Files.readAllBytes(path), charSet);
+      return createFromString(gameAsString);
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public static Game createFromPath(Path path) {
     try {
       String gameAsString = new String(Files.readAllBytes(path), "UTF-8");
