@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class VisualDepthHelper {
 
+  private List<List<Integer>> depthMatrix;
+
   public void calculateVisualDepth(GameNode lastNode) {
     // if there are no moves, for example we are just
     // looking at a problem then we can skip calculating
@@ -37,6 +39,7 @@ public class VisualDepthHelper {
       }
     }
     while ((activeNode = activeNode.getPrevNode()) != null);
+    this.depthMatrix = depthMatrix;
   }
 
   private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
@@ -101,16 +104,11 @@ public class VisualDepthHelper {
         }
       }
 
-      List<Integer> levelList = depthMatrix.get(depthDelta);
-
-      boolean available = isAvailableForLineOfPlay(node, length, levelList);
+      boolean available = isAvailableForLineOfPlay(node, length, depthMatrix, depthDelta);
 
       if (available) {
-        bookForLineOfPlay(node, length, levelList);
+        bookForLineOfPlay(node, length, depthMatrix, depthDelta);
         break;
-      }
-      else {
-        isAvailableForLineOfPlay(node, length, levelList);
       }
       depthDelta++;
     }
@@ -119,18 +117,41 @@ public class VisualDepthHelper {
     return depthDelta;
   }
 
-  protected void bookForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
+  /*
+   * Iterates over the depthMatrix and marks all the needed cells as booked (the number 1).
+   */
+  protected void bookForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex) {
+    List<Integer> levelList = depthMatrix.get(listIndex);
+
     int start = 0;
     if (node.getMoveNo() > 0) {
       start = node.getMoveNo() - 1;
     }
+
+    // book the line of play (horizontal line)
     for (int i = start; i < (node.getMoveNo() + length); i++) {
       levelList.set(i, 1);
     }
+
+    // book the "glue" pieces (vertical lines for the connection lines)
+    for (int i = 1; i < listIndex; i++) {
+      List<Integer> tmpLevelList = depthMatrix.get(i);
+      tmpLevelList.set(start, 1);
+    }
   }
 
-  protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<Integer> levelList) {
-    // if the row is not initialized yet then lets fill with 0s
+  /*
+   * Iterates over the depthMatrix and checks whether we can put the variation on this particular line.
+   *
+   * Each variation needs room for the actual moves and also one spot for the glue piece (the line designating
+   * the parent move). If the variation is quite deep then it will need a glue code piece for each row.
+   *
+   * This method will analyse the matrix for the availability for these. If found they can be "booked"
+   * with the bookForLineOfPlay(). If not found we can just look a level deeper.
+   */
+  protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex) {
+    // if the marker row is not initialized yet then lets fill with 0s
+    List<Integer> levelList = depthMatrix.get(listIndex);
     if (levelList.size() <= node.getMoveNo()) {
       for (int i = levelList.size(); i <= node.getMoveNo() + length; i++) {
         levelList.add(i, 0);
@@ -144,13 +165,32 @@ public class VisualDepthHelper {
       marker = levelList.get(node.getMoveNo() - 1);
     }
 
+    // we'll look at the array and make sure nobody has booked anything yet
     for (int i = marker; i < node.getMoveNo() + length; i++) {
       Integer localMarker = levelList.get(i);
       if (localMarker == 1) {
         return false;
       }
     }
+
+    // now lets look at whether there is room for the glue piece
+    for (int i = 1; i < listIndex; i++) {
+      List<Integer> tmpLevelList = depthMatrix.get(i);
+      if (tmpLevelList.get(marker) == 1)
+        return false;
+    }
+
     return true;
+  }
+
+  /*
+   * Helper to print out the matrix for debugging purposes.
+   */
+  public void printDepthMatrix() {
+    for (Iterator<List<Integer>> ite = depthMatrix.iterator(); ite.hasNext();) {
+      List<Integer> list = ite.next();
+      System.out.println(list);
+    }
   }
 
   /**
