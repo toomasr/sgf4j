@@ -12,6 +12,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private final Map<String, String> properties = new HashMap<String, String>();
 
   private int moveNo = -1;
+  private int nodeNo = -1;
   private int visualDepth = -1;
 
   private GameNode parentNode;
@@ -247,5 +248,13 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public boolean isPlacementMove() {
     return properties.get("W") == null && properties.get("B") == null
         && (properties.get("AB") != null || properties.get("AW") != null);
+  }
+
+  public void setNodeNo(int nodeNo) {
+    this.nodeNo = nodeNo;
+  }
+
+  public int getNodeNo() {
+    return this.nodeNo;
   }
 }

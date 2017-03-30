@@ -91,30 +91,34 @@ public class Game {
     while (((node = node.getNextNode()) != null));
 
     // number all the moves
-    numberTheMoves(getRootNode(), 1);
+    numberTheMoves(getRootNode(), 1, 0);
 
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
     helper.calculateVisualDepth(getLastMove());
   }
 
-  private void numberTheMoves(GameNode startNode, int moveNo) {
+  private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
     GameNode node = startNode;
     int nextMoveNo = moveNo;
+    int nextNodeNo = nodeNo;
 
     if (node.isMove()) {
       startNode.setMoveNo(moveNo);
       nextMoveNo++;
     }
 
+    startNode.setNodeNo(nodeNo);
+    nextNodeNo++;
+
     if (node.getNextNode() != null) {
-      numberTheMoves(node.getNextNode(), nextMoveNo);
+      numberTheMoves(node.getNextNode(), nextMoveNo, nextNodeNo);
     }
 
     if (node.hasChildren()) {
       for (Iterator<GameNode> ite = node.getChildren().iterator(); ite.hasNext();) {
         GameNode childNode = ite.next();
-        numberTheMoves(childNode, nextMoveNo);
+        numberTheMoves(childNode, nextMoveNo, nextNodeNo);
       }
     }
   }
