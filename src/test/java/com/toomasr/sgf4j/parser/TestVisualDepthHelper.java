@@ -136,4 +136,16 @@ public class TestVisualDepthHelper extends TestCase {
     assertEquals(1, node2.getVisualDepth());
     assertEquals(2, node2.getChildren().iterator().next().getVisualDepth());
   }
+
+  public void testProblematic006() throws Exception {
+    Path path = Paths.get("./src/test/resources/problematic-006.sgf");
+    String gameAsString = new String(Files.readAllBytes(path));
+    Parser parser = new Parser(gameAsString);
+    Game game = parser.parse();
+    game.postProcess();
+    // if we made it this far then this is a success
+    // before fixing postprocessing for this game it would
+    // get stuck
+    assertTrue(true);
+  }
 }

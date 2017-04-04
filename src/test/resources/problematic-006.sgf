@@ -1,0 +1,59 @@
+
+(;CA[UTF-8]FF[4]GM[1]ST[2]AP[GOWrite:2.3.28]SZ[19]PB[ ]FG[259:]C[Problem\: White to play in the bottom right corner. 
+IMPORTANT\: This is one of the most famous and basic life-and-death problem.
+Please ignore the rest of the Go board.]PW[ ]GN[ ]PM[2]AB[jf][nf][bo][co][cc][dc][cp][dp][ep][lb][ed][gd][lc][fq][id][jd][fe][ld][fr][qp][he][nd][ke][pq][pp][qn][or][nq][dq][es]AW[cg][cn][lf][qf][eb][bc][bp][lh][kb][cj][gc][cd][hc][bq][ic][cq][kc][eq][be][hd][kd][er][pd][le][rq][qq][pr][qs][dr][cs]
+(
+;C[Answer\:
+w can play somewhere else.  In fact w should not play anything in the bottom right corner. ]W[qi]
+;C[This is the vital point, but in this case this does not work. ]B[sr]
+;W[rr]
+;C[Problem\: White to play.  ]B[os]
+;C[Answer\:]W[ss]
+;B[ps]
+;W[qr]
+;B[rs]
+;L[ss]C[This is called "squashing" or "crushing".  b cannot play at bA. ]W[sq]
+;B[rp]
+;C[This is alive.  ]W[ss]
+;
+)
+(
+;C[Mistake\:]W[rp]
+;B[ro]
+;L[rp][ro]C[With an exchange of wA for bB, this w group is no longer alive. 
+
+Problem\: Black to play.  ]W[qi]
+(
+;L[ar]C[Answer\:
+This is the vital point.  This is the same the vital point as bA. ]B[sr]
+;W[rr]
+;B[os]
+;W[ss]
+;B[ps]
+;W[qr]
+;C[This is ko. See the following. ]B[rs]
+;C[Suppose w has no ko threats and plays this.
+
+Problem\: Black to play.  ]W[ej]
+(
+;C[Answer\:
+This is dead.  ]B[ss]
+)
+(
+;C[Mistake\:]B[sp]
+;C[This is ko again.]W[ss]
+)
+
+)
+(
+;C[Mistake\:
+
+Problem\: White to play.  ]B[rr]
+;C[Answer\:]W[sr]
+;B[sp]
+;C[This is alive.  ]W[rs]
+)
+
+)
+
+)
