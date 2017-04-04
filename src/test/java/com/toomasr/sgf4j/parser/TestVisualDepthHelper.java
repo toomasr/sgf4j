@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,7 +48,10 @@ public class TestVisualDepthHelper extends TestCase {
 
   @Test
   public void testBookForLineOfPlay() throws Exception {
-    helper.bookForLineOfPlay(firstChild, 2, nodeMarkerList);
+    List<List<Integer>> depthMatrix = new ArrayList<>();
+    depthMatrix.add(0, nodeMarkerList);
+
+    helper.bookForLineOfPlay(firstChild, 2, depthMatrix, 0, 1);
 
     Assert.assertEquals(0, (int) nodeMarkerList.get(0));
     Assert.assertEquals(1, (int) nodeMarkerList.get(1));
@@ -63,14 +67,19 @@ public class TestVisualDepthHelper extends TestCase {
     nodeMarkerList.set(2, 1);
     nodeMarkerList.set(3, 1);
 
-    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, nodeMarkerList);
+    List<List<Integer>> depthMatrix = new ArrayList<>();
+    depthMatrix.add(0, nodeMarkerList);
+
+    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, depthMatrix, 0, 1);
     assertFalse(result);
   }
 
   @Test
   public void testIsAvailableForlineOfPlaySuccess() throws Exception {
+    List<List<Integer>> depthMatrix = new ArrayList<>();
+    depthMatrix.add(0, nodeMarkerList);
 
-    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, nodeMarkerList);
+    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, depthMatrix, 0, 1);
     assertTrue(result);
   }
 
@@ -79,13 +88,17 @@ public class TestVisualDepthHelper extends TestCase {
     nodeMarkerList.set(4, 1);
     nodeMarkerList.set(5, 1);
     nodeMarkerList.set(6, 1);
-    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, nodeMarkerList);
+
+    List<List<Integer>> depthMatrix = new ArrayList<>();
+    depthMatrix.add(0, nodeMarkerList);
+
+    boolean result = helper.isAvailableForLineOfPlay(firstChild, 2, depthMatrix, 0, 1);
     assertTrue(result);
   }
 
   @Test
   public void testCalculateVisualDepth() {
-    helper.calculateVisualDepth(simpleBranchingGame.getLastMove());
+    helper.calculateVisualDepth(simpleBranchingGame.getLastMove(), 1);
 
     assertEquals(1, firstChild.getVisualDepth());
     assertEquals(2, secondChild.getVisualDepth());
@@ -93,7 +106,7 @@ public class TestVisualDepthHelper extends TestCase {
 
   @Test
   public void testCalculateVisualDepthComplex1() {
-    helper.calculateVisualDepth(complexBranchingGame.getLastMove());
+    helper.calculateVisualDepth(complexBranchingGame.getLastMove(), 1);
 
     GameNode rootNode = complexBranchingGame.getFirstMove();
 
