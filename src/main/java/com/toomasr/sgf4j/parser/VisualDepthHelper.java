@@ -14,7 +14,15 @@ public class VisualDepthHelper {
 
   private List<List<Integer>> depthMatrix;
 
-  public void calculateVisualDepth(GameNode lastNode) {
+  /*
+   * We'll start iterating over the nodes from last to first and
+   * calculate how "deep" should they be displayed in the tree. The
+   * mainline is on depth 0.
+   *
+   * @param variationDepth depth of the variation for the first level child
+   * of the line of play.
+   */
+  public void calculateVisualDepth(GameNode lastNode, int variationDepth) {
     // if there are no moves, for example we are just
     // looking at a problem then we can skip calculating
     // the visual depth
@@ -34,7 +42,8 @@ public class VisualDepthHelper {
         for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
           // the do/while iterates over the main line that has depth 0
           // all other branches have to be at least depth 1
-          calculateVisualDepthFor(ite.next(), depthMatrix, 1);
+          variationDepth = variationDepth + 1;
+          calculateVisualDepthFor(ite.next(), depthMatrix, 1, variationDepth);
         }
       }
     }
@@ -42,15 +51,15 @@ public class VisualDepthHelper {
     this.depthMatrix = depthMatrix;
   }
 
-  private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
-    int depth = findVisualDepthForNode(node, depthMatrix, minDepth);
+  private void calculateVisualDepthFor(GameNode node, List<List<Integer>> depthMatrix, int minDepth, int variationDepth) {
+    int depth = findVisualDepthForNode(node, depthMatrix, minDepth, variationDepth);
     GameNode lastNodeInLine = setVisualDepthForLine(node, depth);
 
     GameNode activeNode = lastNodeInLine;
     do {
       if (activeNode.hasChildren()) {
         for (Iterator<GameNode> ite = activeNode.getChildren().iterator(); ite.hasNext();) {
-          calculateVisualDepthFor(ite.next(), depthMatrix, depth + 1);
+          calculateVisualDepthFor(ite.next(), depthMatrix, depth + 1, variationDepth);
         }
       }
       if (activeNode.equals(node)) {
@@ -91,7 +100,7 @@ public class VisualDepthHelper {
     return rtrn;
   }
 
-  protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix, int minDepth) {
+  protected int findVisualDepthForNode(GameNode node, List<List<Integer>> depthMatrix, int minDepth, int variationDepth) {
     int length = findLengthOfLine(node);
 
     int depthDelta = minDepth;
@@ -104,10 +113,10 @@ public class VisualDepthHelper {
         }
       }
 
-      boolean available = isAvailableForLineOfPlay(node, length, depthMatrix, depthDelta);
+      boolean available = isAvailableForLineOfPlay(node, length, depthMatrix, depthDelta, variationDepth);
 
       if (available) {
-        bookForLineOfPlay(node, length, depthMatrix, depthDelta);
+        bookForLineOfPlay(node, length, depthMatrix, depthDelta, variationDepth);
         break;
       }
       depthDelta++;
@@ -120,7 +129,7 @@ public class VisualDepthHelper {
   /*
    * Iterates over the depthMatrix and marks all the needed cells as booked (the number 1).
    */
-  protected void bookForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex) {
+  protected void bookForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex, int variationDepth) {
     List<Integer> levelList = depthMatrix.get(listIndex);
 
     int start = 0;
@@ -134,7 +143,7 @@ public class VisualDepthHelper {
     }
 
     // book the "glue" pieces (vertical lines for the connection lines)
-    for (int i = 1; i < listIndex; i++) {
+    for (int i = variationDepth; i < listIndex; i++) {
       List<Integer> tmpLevelList = depthMatrix.get(i);
       tmpLevelList.set(start, 1);
     }
@@ -149,7 +158,7 @@ public class VisualDepthHelper {
    * This method will analyse the matrix for the availability for these. If found they can be "booked"
    * with the bookForLineOfPlay(). If not found we can just look a level deeper.
    */
-  protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex) {
+  protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex, int variationDepth) {
     // if the marker row is not initialized yet then lets fill with 0s
     List<Integer> levelList = depthMatrix.get(listIndex);
     if (levelList.size() <= node.getMoveNo()) {
@@ -174,7 +183,9 @@ public class VisualDepthHelper {
     }
 
     // now lets look at whether there is room for the glue piece
-    for (int i = 1; i < listIndex; i++) {
+    // the glue piece should run up to the depth of the
+    // variation it came from
+    for (int i = variationDepth; i < listIndex; i++) {
       List<Integer> tmpLevelList = depthMatrix.get(i);
       if (tmpLevelList.get(marker) == 1)
         return false;

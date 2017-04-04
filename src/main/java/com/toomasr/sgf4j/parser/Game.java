@@ -95,7 +95,7 @@ public class Game {
 
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
-    helper.calculateVisualDepth(getLastMove());
+    helper.calculateVisualDepth(getLastMove(), 1);
   }
 
   private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
