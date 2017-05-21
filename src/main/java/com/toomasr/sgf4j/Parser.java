@@ -17,7 +17,7 @@ public class Parser {
   private final String originalGame;
 
   // http://www.red-bean.com/sgf/properties.html
-  private static final Set<String> generalProps = new HashSet<String>();
+  private static final Set<String> generalProps = new HashSet<>();
 
   static {
     // Application used to generate the SGF
@@ -199,7 +199,7 @@ public class Parser {
     nodeProps.add("L");
   }
 
-  private Stack<GameNode> treeStack = new Stack<GameNode>();
+  private Stack<GameNode> treeStack = new Stack<>();
 
   public Parser(String game) {
     originalGame = game;
