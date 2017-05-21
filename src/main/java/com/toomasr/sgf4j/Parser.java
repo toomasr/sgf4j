@@ -149,9 +149,13 @@ public class Parser {
     generalProps.add("WL");
     // time left for black
     generalProps.add("BL");
+
+    // Multigo specific properties
+    generalProps.add("MULTIGOGM");
+    generalProps.add("MULTIGOBM");
   }
 
-  private static final Set<String> nodeProps = new HashSet<String>();
+  private static final Set<String> nodeProps = new HashSet<>();
 
   static {
     // Move for Black
