@@ -143,9 +143,14 @@ public class VisualDepthHelper {
     }
 
     // book the "glue" pieces (vertical lines for the connection lines)
-    for (int i = 1; i < listIndex; i++) {
+    // I'll start from the deep end and book the lines until I see a booked
+    // line. I presume the current variation is branching from that found
+    // booked line.
+    for (int i = listIndex-1; i > 0; i--) {
       List<Integer> tmpLevelList = depthMatrix.get(i);
       expandListIfNeeded(tmpLevelList, start);
+      if (tmpLevelList.get(start) == 1)
+        break;
       tmpLevelList.set(start, 1);
     }
   }
@@ -192,16 +197,6 @@ public class VisualDepthHelper {
         return false;
       }
     }
-
-    // now lets look at whether there is room for the glue piece
-    // the glue piece should run up to the depth of the
-    // variation it came from
-    for (int i = variationDepth; i < listIndex; i++) {
-      List<Integer> tmpLevelList = depthMatrix.get(i);
-      if (tmpLevelList.get(marker) == 1)
-        return false;
-    }
-
     return true;
   }
 
