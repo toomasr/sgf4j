@@ -143,7 +143,7 @@ public class VisualDepthHelper {
     }
 
     // book the "glue" pieces (vertical lines for the connection lines)
-    for (int i = variationDepth; i < listIndex; i++) {
+    for (int i = 1; i < listIndex; i++) {
       List<Integer> tmpLevelList = depthMatrix.get(i);
       expandListIfNeeded(tmpLevelList, start);
       tmpLevelList.set(start, 1);
