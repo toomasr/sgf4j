@@ -182,7 +182,7 @@ public class VisualDepthHelper {
     // want to show to "glue stone"
     Integer marker = 0;
     if (node.getMoveNo() > 1) {
-      marker = levelList.get(node.getMoveNo() - 1);
+      marker = node.getMoveNo() - 1;
     }
 
     // we'll look at the array and make sure nobody has booked anything yet
