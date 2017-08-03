@@ -1,7 +1,9 @@
 package com.toomasr.sgf4j.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +35,29 @@ public class Util {
     put("r", 17);
     put("s", 18);
     put("t", 19);
+  }};
+
+  public static final Map<Integer, String> coordToAlpha = new HashMap<Integer, String>(){{
+    put(0, "a");
+    put(1, "b");
+    put(2, "c");
+    put(3, "d");
+    put(4, "e");
+    put(5, "f");
+    put(6, "g");
+    put(7, "h");
+    put(8, "i");
+    put(9, "j");
+    put(10, "k");
+    put(11, "l");
+    put(12, "m");
+    put(13, "n");
+    put(14, "o");
+    put(15, "p");
+    put(16, "q");
+    put(17, "r");
+    put(18, "s");
+    put(19, "t");
   }};
   //@formatter:on
   private Util() {
@@ -66,5 +91,29 @@ public class Util {
       rtrn.put(label[0], label[1]);
     }
     return rtrn;
+  }
+
+  public static String[] coordSequencesToSingle(String addBlack) {
+    List<String> rtrn = new ArrayList<>();
+    String[] blackStones = addBlack.split(",");
+    for (int i = 0; i < blackStones.length; i++) {
+      if (blackStones[i].contains(":")) {
+        String[] seq = blackStones[i].split(":");
+        if (seq[0].charAt(0) == seq[1].charAt(0)) {
+          for (int j = Util.alphaToCoord.get(seq[0].charAt(1)+""); j <= Util.alphaToCoord.get(seq[1].charAt(1)+""); j++) {
+            rtrn.add(seq[0].charAt(0) + coordToAlpha.get(j));
+          }
+        }
+        else {
+          for (int j = Util.alphaToCoord.get(seq[0].charAt(0)+""); j <= Util.alphaToCoord.get(seq[1].charAt(0)+""); j++) {
+            rtrn.add(coordToAlpha.get(j)+seq[0].charAt(1));
+          }
+        }
+      }
+      else {
+        rtrn.add(blackStones[i]);
+      }
+    }
+    return rtrn.toArray(new String[] {});
   }
 }
