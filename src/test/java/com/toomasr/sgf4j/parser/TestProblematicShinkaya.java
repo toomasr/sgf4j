@@ -10,7 +10,7 @@ import com.toomasr.sgf4j.Parser;
 
 import junit.framework.TestCase;
 
-public class TestProblematic7 extends TestCase {
+public class TestProblematicShinkaya extends TestCase {
   @Test
   public void testParseProblematic7() throws Exception {
     Path path = Paths.get("./src/test/resources/problematic-007.sgf");
@@ -18,7 +18,6 @@ public class TestProblematic7 extends TestCase {
     Parser parser = new Parser(gameAsString);
     Game game = parser.parse();
     game.postProcess();
-
-    System.out.println(game);
+    assertTrue(game.getProperty("AW").length() > 0);
   }
 }
