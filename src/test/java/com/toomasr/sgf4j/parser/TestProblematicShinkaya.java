@@ -38,7 +38,7 @@ public class TestProblematicShinkaya extends TestCase {
         count++;
       }
     }
-    assertEquals(7, count);
+    assertEquals(9, count);
   }
 
   @Test
