@@ -287,6 +287,9 @@ public class Parser {
         else if (insideValue) {
           rtrn.append(chr);
         }
+        else if ('\n' == chr) {
+          // skip newlines
+        }
         else if (';' != chr && ')' != chr && '(' != chr) {
           rtrn.append(chr);
         }

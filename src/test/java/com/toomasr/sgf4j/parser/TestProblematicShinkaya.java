@@ -40,4 +40,17 @@ public class TestProblematicShinkaya extends TestCase {
     }
     assertEquals(7, count);
   }
+
+  @Test
+  public void testParseProblematic9() throws Exception {
+    Path path = Paths.get("./src/test/resources/problematic-009.sgf");
+    String gameAsString = new String(Files.readAllBytes(path));
+    Parser parser = new Parser(gameAsString);
+    Game game = parser.parse();
+    game.postProcess();
+    // if newlines are discarded we'll have all the props presents
+    // this happens to have a len of 20
+    assertEquals(20, game.getProperty("AW").length());
+  }
+
 }
