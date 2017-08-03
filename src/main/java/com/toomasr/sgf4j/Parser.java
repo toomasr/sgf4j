@@ -28,6 +28,8 @@ public class Parser {
     generalProps.add("WR");
     // KOMI
     generalProps.add("KM");
+    // weird alternative KOMI
+    generalProps.add("GKM");
     // Black Player Extended information
     generalProps.add("PBX");
     // Black Player name
