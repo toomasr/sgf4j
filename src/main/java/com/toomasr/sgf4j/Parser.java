@@ -197,6 +197,10 @@ public class Parser {
      * Example: L[fg][es][jk] -> LB[fg:A][es:B][jk:C]
      */
     nodeProps.add("L");
+
+    // don't quite get it what it means
+    // but lets parse this out
+    nodeProps.add("WV");
   }
 
   private Stack<GameNode> treeStack = new Stack<>();
@@ -253,6 +257,7 @@ public class Parser {
   private String consumeUntil(String gameStr, int i) {
     StringBuffer rtrn = new StringBuffer();
     boolean insideComment = false;
+    boolean insideValue = false;
     for (int j = i + 1; j < gameStr.length(); j++) {
       char chr = gameStr.charAt(j);
       if (insideComment) {
@@ -264,6 +269,20 @@ public class Parser {
       else {
         if ('C' == chr && '[' == gameStr.charAt(j + 1)) {
           insideComment = true;
+          rtrn.append(chr);
+        }
+        else if ('[' == chr) {
+          insideValue = true;
+          rtrn.append(chr);
+        }
+        else if (']' == chr) {
+          insideValue = false;
+          rtrn.append(chr);
+        }
+        // while inside the value lets consume everything -
+        // even chars that otherwise would have special meaning
+        // like ;()
+        else if (insideValue) {
           rtrn.append(chr);
         }
         else if (';' != chr && ')' != chr && '(' != chr) {
