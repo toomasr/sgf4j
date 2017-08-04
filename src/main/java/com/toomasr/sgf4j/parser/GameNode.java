@@ -98,7 +98,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     }
 
     if (children.contains(node)) {
-      throw new RuntimeException("Node " + node + " already exists for " + this);
+      throw new RuntimeException("Node '" + node + "' already exists for " + this);
     }
 
     children.add(node);

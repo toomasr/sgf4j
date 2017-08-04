@@ -155,6 +155,11 @@ public class Parser {
     // Multigo specific properties
     generalProps.add("MULTIGOGM");
     generalProps.add("MULTIGOBM");
+    // hotspot - no idea :)
+    generalProps.add("HO");
+    // some go program info probably
+    generalProps.add("GOGGPFF");
+    generalProps.add("GOGGPAP");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
@@ -205,6 +210,8 @@ public class Parser {
     nodeProps.add("WV");
     // dimmed stones - see http://www.red-bean.com/sgf/DD_VW.html
     nodeProps.add("VW");
+    // Tesuji - don't know what to do with it though
+    nodeProps.add("TE");
   }
 
   private Stack<GameNode> treeStack = new Stack<>();
