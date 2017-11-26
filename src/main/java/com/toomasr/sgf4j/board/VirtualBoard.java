@@ -31,7 +31,7 @@ public class VirtualBoard {
 
   public void makeMove(GameNode move, GameNode prevMove) {
     // only if the move is not a pass
-    if (!move.isPass() && !move.isPlacementMove()) {
+    if (move.getMoveString() != null && !move.isPass() && !move.isPlacementMove()) {
       int x = move.getCoords()[0];
       int y = move.getCoords()[1];
       this.vBoard[x][y] = new Square(move.getColorAsEnum(), x, y);
@@ -89,7 +89,7 @@ public class VirtualBoard {
 
   public Set<Group> removeDeadGroups(StoneState color) {
     Set<Group> groups = findDistinctGroups(color);
-    Set<Group> rtrn = new HashSet<Group>();
+    Set<Group> rtrn = new HashSet<>();
     for (Iterator<Group> ite = groups.iterator(); ite.hasNext();) {
       Group group = ite.next();
       if (group.isDead(vBoard)) {
@@ -116,9 +116,9 @@ public class VirtualBoard {
   }
 
   protected Set<Group> findDistinctGroups(StoneState color) {
-    Set<Square> alreadyChecked = new HashSet<Square>();
+    Set<Square> alreadyChecked = new HashSet<>();
 
-    Set<Group> groups = new HashSet<Group>();
+    Set<Group> groups = new HashSet<>();
     Group activeGroup = new Group();
     for (int i = 0; i < vBoard.length; i++) {
       for (int j = 0; j < vBoard[i].length; j++) {
@@ -199,9 +199,9 @@ public class VirtualBoard {
     List<GameNode> movesToPlay = new ArrayList<>();
     GameNode node = fwdTo;
     do {
-      if (node.isMove()) {
+      //if (node.isMove()) {
         movesToPlay.add(node);
-      }
+      //}
     }
     while ((node = node.getParentNode()) != null);
 

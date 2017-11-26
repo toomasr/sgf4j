@@ -177,7 +177,8 @@ public class VisualDepthHelper {
   protected boolean isAvailableForLineOfPlay(GameNode node, int length, List<List<Integer>> depthMatrix, int listIndex, int variationDepth) {
     // if the marker row is not initialized yet then lets fill with 0s
     List<Integer> levelList = depthMatrix.get(listIndex);
-    if (levelList.size() <= node.getMoveNo()) {
+    // the node.getMoveNo() can be -1 if there are more than 1 "starting positions" in a SGF file
+    if (levelList.size() <= node.getMoveNo() || node.getMoveNo() == -1) {
       for (int i = levelList.size(); i <= node.getMoveNo() + length; i++) {
         levelList.add(i, 0);
       }

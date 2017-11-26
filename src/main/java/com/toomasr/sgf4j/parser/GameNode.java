@@ -8,8 +8,8 @@ import java.util.TreeSet;
 import com.toomasr.sgf4j.board.StoneState;
 
 public class GameNode implements Comparable<GameNode>, Cloneable {
-  private final Set<GameNode> children = new TreeSet<GameNode>();
-  private final Map<String, String> properties = new HashMap<String, String>();
+  private final Set<GameNode> children = new TreeSet<>();
+  private final Map<String, String> properties = new HashMap<>();
 
   private int moveNo = -1;
   private int nodeNo = -1;
@@ -59,7 +59,8 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
       return properties.get("B");
     }
     else {
-      throw new RuntimeException("Unable to extract move from " + properties.toString());
+      //throw new RuntimeException("Unable to extract move from " + properties.toString());
+      return null;
     }
   }
 
