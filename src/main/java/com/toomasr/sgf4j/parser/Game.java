@@ -30,7 +30,17 @@ public class Game {
   }
 
   public void addProperty(String key, String value) {
-    properties.put(key, value);
+    /* Actually properties can be set multiple times and it seems based on
+     * other software that the expectation is that everything is appended rather
+     * than the last definition wins.
+     */
+    if (properties.get(key) != null) {
+      String current = properties.get(key);
+      properties.put(key, current+","+value);
+    }
+    else {
+      properties.put(key, value);
+    }
   }
 
   public String getProperty(String key) {
