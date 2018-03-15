@@ -152,6 +152,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     result = prime * result + moveNo;
     result = prime * result + ((parentNode == null) ? 0 : parentNode.properties.hashCode());
     result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+    result = prime * result + visualDepth;
     return result;
   }
 
@@ -184,6 +185,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     }
     else if (!properties.equals(other.properties))
       return false;
+    if (visualDepth != other.visualDepth)
+      return false;
+
     return true;
   }
 
