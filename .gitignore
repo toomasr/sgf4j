@@ -6,3 +6,4 @@ target
 src/main/java/com/toomasr/sgf4j/tmp
 .hg
 .hgignore
+rebel.xml
