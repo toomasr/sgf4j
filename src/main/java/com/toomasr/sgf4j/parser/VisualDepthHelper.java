@@ -215,7 +215,7 @@ public class VisualDepthHelper {
    * Returns the length of this game line. This is the length with
    * no branch taken into account except the main line for this branch.
    *
-   * @param node
+   * @param node is the node we start the walking from
    * @return no of moves in the main line from this node
    */
   protected int findLengthOfLine(final GameNode node) {

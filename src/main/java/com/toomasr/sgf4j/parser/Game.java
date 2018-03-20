@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import com.toomasr.sgf4j.Sgf;
 
+/**
+ * This class denotes a Go game. It deals with loading the game and saving the game
+ * back to disk.
+ */
 public class Game {
   private static final Logger log = LoggerFactory.getLogger(Game.class);
 

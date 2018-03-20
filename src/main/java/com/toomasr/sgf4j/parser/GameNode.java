@@ -7,6 +7,10 @@ import java.util.TreeSet;
 
 import com.toomasr.sgf4j.board.StoneState;
 
+/**
+ * GameNode is any node of a game. This can be any SGF node, whether it is an actual
+ * move, markers, placement of stones etc. More information at https://www.red-bean.com/sgf/sgf4.html
+ */
 public class GameNode implements Comparable<GameNode>, Cloneable {
   private final Set<GameNode> children = new TreeSet<>();
   private final Map<String, String> properties = new HashMap<>();
@@ -248,7 +252,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
    * There are moves that actually don't place a stone of a
    * move but rather a new added position. I call this a placementMove
    *
-   * @return
+   * @return true if this is a placement move and not a game move
    */
   public boolean isPlacementMove() {
     return properties.get("W") == null && properties.get("B") == null
