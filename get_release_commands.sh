@@ -38,7 +38,7 @@ fi
 echo "# To release sgf4j version ${version} run these commands:"
 echo ""
 echo "# 1) set release version"
-echo "./mvn versions:set -DnewVersion=${version}"
+echo "./mvnw versions:set -DnewVersion=${version}"
 
 echo ""
 echo "# 2) commit & tag"
@@ -48,31 +48,31 @@ echo "git tag sgf4j-${version}"
 
 echo ""
 echo "# 3) build release"
-echo "./mvn clean install"
+echo "./mvnw clean install"
 
 echo ""
 echo "# 4) generate javadoc archive"
-echo "./mvn javadoc:jar"
+echo "./mvnw javadoc:jar"
 
 echo ""
 echo "# 5) generate sources archive"
-echo "./mvn source:jar"
+echo "./mvnw source:jar"
 
 echo ""
 echo "# 6) deploy and sign releases archive"
-echo "./mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1.jar"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1.jar"
 
 echo ""
 echo "# 7) deploy and sign sources archive"
-echo "./mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-sources.jar -Dclassifier=sources"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-sources.jar -Dclassifier=sources"
 
 echo ""
 echo "# 8) deploy and sign javadoc archive"
-echo "./mvn gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-javadoc.jar -Dclassifier=javadoc"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-javadoc.jar -Dclassifier=javadoc"
 
 echo ""
 echo "# 9) set new development version"
-echo "./mvn versions:set -DnewVersion=${new_version}"
+echo "./mvnw versions:set -DnewVersion=${new_version}"
 echo "git add pom.xml; "
 echo "git commit -m \"prepare for next development iteration\""
 
