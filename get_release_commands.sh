@@ -3,7 +3,7 @@
 
 if [[ "$1" = "-h" ]] || [[ "$1" = "--help" ]]; then
   echo "Usage: './get_release_commands.sh VERSION_TO_RELEASE [NEW_DEV_VERSION]'"
-  echo "Prints out commands to run to release sgf4j to Maven Central."
+  echo "Prints out commands to run to release sgf4j-parser to Maven Central."
   echo "VERSION_TO_RELEASE must be a number (integer or floating). NEW_DEV_VERSION is optional"
   exit 0
 fi
@@ -35,7 +35,7 @@ else
 fi
 
 
-echo "# To release sgf4j version ${version} run these commands:"
+echo "# To release sgf4j-parser version ${version} run these commands:"
 echo ""
 echo "# 1) set release version"
 echo "./mvnw versions:set -DnewVersion=${version}"
@@ -43,8 +43,8 @@ echo "./mvnw versions:set -DnewVersion=${version}"
 echo ""
 echo "# 2) commit & tag"
 echo "git add pom.xml; "
-echo "git commit -m \"Prepare release sgf4j-${version}\""
-echo "git tag sgf4j-${version}"
+echo "git commit -m \"Prepare release sgf4j-parser-${version}\""
+echo "git tag sgf4j-parser-${version}"
 
 echo ""
 echo "# 3) build release"
@@ -60,15 +60,15 @@ echo "./mvnw source:jar"
 
 echo ""
 echo "# 6) deploy and sign releases archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1.jar"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1.jar"
 
 echo ""
 echo "# 7) deploy and sign sources archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-sources.jar -Dclassifier=sources"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1-sources.jar -Dclassifier=sources"
 
 echo ""
 echo "# 8) deploy and sign javadoc archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-$1-javadoc.jar -Dclassifier=javadoc"
+echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1-javadoc.jar -Dclassifier=javadoc"
 
 echo ""
 echo "# 9) set new development version"
