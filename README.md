@@ -5,6 +5,21 @@ I've been doing some serious [yak shaving](https://en.wiktionary.org/wiki/yak_sh
 
 As a side result of [that viewer](https://github.com/toomasr/sgf4j-gui) I had to do some SGF parsing. Hence this project. You can use this library to parse SGF files and then actually play it out on a virtual board and then write out the SGF if you want to. I test the library with bunch of databases to make sure it is able to parse enough different SGF files and also when writing those out no data is lost.
 
+Include in your project
+=======================
+
+The project is synced to Maven Central and to use it just include it in your `pom.xml`.
+
+```
+<dependencies>
+  <dependency>
+    <groupId>com.toomasr</groupId>
+    <artifactId>sgf4j-parser</artifactId>
+    <version>0.0.1</version>
+  </dependency>
+<dependencies>
+```
+
 Parsing
 =======
 
