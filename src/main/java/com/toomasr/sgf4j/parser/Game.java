@@ -228,21 +228,24 @@ public class Game {
       return false;
     }
 
+    // First let's check the nextNode
     GameNode nextNode = node.getNextNode();
     GameNode nextOtherNode = otherNode.getNextNode();
 
     if (nextNode != null) {
-      doAllNodesEqual(game, nextNode, otherGame, nextOtherNode);
+      if (!nextNode.equals(nextOtherNode)) {
+        return false;
+      }
+
+      if (!doAllNodesEqual(game, nextNode, otherGame, nextOtherNode)) {
+        return false;
+      }
     }
-    // if nextNode is null lets make sure the other one is too
-    else if (nextNode != nextOtherNode) {
+    else if (nextNode == null && nextOtherNode != null) {
       return false;
     }
 
-    if (!nextNode.equals(nextOtherNode)) {
-      return false;
-    }
-
+    // Secondly let's check the children nodes
     Set<GameNode> children = node.getChildren();
     Set<GameNode> otherChildren = otherNode.getChildren();
 
