@@ -28,10 +28,7 @@ public class FindDuplicates {
     int bMatches = 0;
     int gMatches = 0;
     for (int i = 0; i < sgfFiles.length; i++) {
-      for (int j = i; j < sgfFiles.length; j++) {
-        if (i == j)
-          continue;
-
+      for (int j = i+1; j < sgfFiles.length; j++) {
         if (SgfCompare.binaryCompare(sgfFiles[i], sgfFiles[j])) {
           System.out.println("Binary match:");
           System.out.println("\t" + sgfFiles[i]);
