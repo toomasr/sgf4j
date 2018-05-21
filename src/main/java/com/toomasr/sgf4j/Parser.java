@@ -355,11 +355,12 @@ public class Parser {
           rtrnNode.addProperty(key, value);
         }
       }
-      else if (generalProps.contains(key)) {
-        game.addProperty(key, value);
-      }
-      else if (nodeProps.contains(key)) {
-        rtrnNode.addProperty(key, cleanValue(value));
+      else if (generalProps.contains(key) || nodeProps.contains(key)) {
+        if (generalProps.contains(key))
+          game.addProperty(key, cleanValue(value));
+
+        if (nodeProps.contains(key))
+          rtrnNode.addProperty(key, cleanValue(value));
       }
       else if ("L".equals(key)) {
         log.debug("Not handling " + key + " = " + value);
