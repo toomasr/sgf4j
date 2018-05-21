@@ -1,0 +1,232 @@
+(;
+WR[5-7d]
+BR[2d]
+DT[2018-04-14]
+PC[Cambridge]
+KM[0.5]
+RU[Japanese]
+ST[2]
+C[Two mid-Dan Games
+Commentary:  Guo Juan 5P
+Game Editor:  Myron Souris
+Published in the May 8, 2018 edition of the American Go E-Journal
+
+Guo Juan 5P covers a couple games between mid-dan level players.  The 1st game, between a 2 dan and 5 dan, highlights issues relating to strong vs. weak stones.  The 2nd game, between a 2 dan and 7 dan, beautifully illustrates how to choose the direction of play.
+
+Guo Juan 5P is a popular go teacher based in Amsterdam.  Check out her online go school at www.internetgoschool.com, featuring recorded lectures and problems presented in a Spaced Repetition System.  Here you will learn and remember correct play.  And there's a one month free trial!]
+(;
+B[pd]
+C[This 1st game is between a 2 dan and a 5 dan.  The variation contains the 2nd game in this commentary.];
+W[dc];B[qp];W[dp];B[nq];W[nc];B[ce]
+(;
+W[dh];B[gc];W[de];B[jc]
+LB[oc:A][dd:B]
+C[Black's plan was good.  Next, A and B are miai for Black.]
+(;
+W[qf];B[oe];W[qc];B[dd]
+C[This move is nice when the ladder is good for Black.];
+W[ed];B[cd];W[ee];B[cc]
+(;
+W[ec]
+(;
+B[bh]
+C[Feels a little slow.]
+(;
+W[bg]
+C[Feels slow.];
+B[cg];W[ch];B[bf];W[bi];B[ag];W[dg];B[pc]
+TR[dg][ch][bi]
+C[Black has sente to start in the upper right, which is why I feel that White playing the marked moves is slow.];
+W[qd];B[pg];W[pf];B[of];W[og];B[pi];W[ng];B[qg];W[rg];B[rh];W[rf];B[me];W[qk];B[rj];W[rk];B[ni];W[lg]
+LB[kd:A]
+C[White has two weak groups, but Black's shape has a weakness at A.]
+(;
+B[mf];W[mg];B[li];W[kh];B[qm];W[ok];B[kj];W[qo];B[pp];W[po];B[oo];W[ro];B[rp];W[pm];B[pn];W[qn]
+(;
+B[rn]
+C[I guess this was a careless move.];
+W[so]
+(;
+B[sp];W[on];B[no]
+C[Now White has sente.]
+(;
+W[nn]
+(;
+B[mo];W[kd]
+C[I want to play here too!];
+B[ob]
+(;
+W[kc]
+C[This result looks great for White.  But see the variation for a little detail that makes life much easier for White.];
+B[qb];W[rb];B[ra];W[sb];B[rd]
+C[Beautiful tesuji!];
+W[rc];B[sd]
+(;
+W[pe]
+C[White loses sente with this move.];
+B[re];W[qe];B[nd]
+C[White dies inside in gote.  The game did not finish, but looks super hard for White now.]
+)
+    (;
+    W[sg]
+    C[Could be a little better than the game.]
+    (;
+    B[re]
+    C[If Black tries to kill, ...];
+    W[qe];B[se];W[ke]
+    C[... White has many liberties inside.  As long as Black does not make two eyes, Black is going to die.  Can you make two eyes for Black?]
+    )
+        (;
+        B[ke]
+        C[But Black can push out first.];
+        W[jd];B[re];W[qe];B[se]
+        LB[kc:A][pe:B]
+        C[Closing Black in now is not easy.  In any event, I think White should have played B first, instead of A, to make sure the corner is alive.]
+        )
+    )
+)
+    (;
+    W[pe];B[mc];W[kc];B[qb];W[rb];B[ra];W[sb];B[rd];W[rc]
+    (;
+    B[re];W[sd]
+    C[White lives.]
+    )
+        (;
+        B[sd];W[re]
+        C[White lives.]
+        )
+    )
+)
+    (;
+    B[pb]
+    C[Black can use sente to play at the top.];
+    W[qb];B[ke]
+    C[I think fixing the weakness at the top is urgent.];
+    W[mo];B[ij];W[ih];B[lq]
+    LB[mo:A]
+    C[In this situation I think White's hane at A is less important.]
+    )
+)
+    (;
+    W[kd];B[nn]
+    C[Turning here seems severe against White's shape, but ...];
+    W[nm]
+    C[... locally White is already alive.  And Black still needs to deal with White's marked shoulder hit.]
+    TR[kd]
+    )
+)
+    (;
+    B[on]
+    C[After making a mistake, keeping cool by connecting here gives us more of a chance.];
+    W[rm];B[pb];W[qb];B[ke]
+    )
+)
+    (;
+    B[so];W[on];B[rn];W[pn];B[rm]
+    )
+)
+    (;
+    B[pb];W[qb];B[ke]
+    C[I would play this way to fix the weakness.];
+    W[li];B[nk];W[qn];B[qo];W[pn];B[oo]
+    C[This result looks very good for Black.  Black is making big territory on the upper side, as well as in the lower right corner.  At the same time, White still has two weak groups.]
+    )
+)
+    (;
+    W[pc]
+    C[I would take sente here instead.];
+    B[df];W[ef]
+    )
+)
+    (;
+    B[cf]
+    LB[eg:A]
+    C[This push gives Black sente.  If White does not defend, Black's keima with A is severe.]
+    )
+)
+    (;
+    W[eb]
+    LB[cb:A]
+    C[This hanging move is better, because White has A next.];
+    B[db];W[ec]
+    LB[db:A][eb:B]
+    C[The A-B exchange makes the two upper side stones weaker.]
+    )
+)
+    (;
+    W[cd]
+    C[Locally, White wants to play here, especially when the ladder is good for Black.];
+    B[oc];W[nd];B[pf]
+    TR[gc][jc]
+    C[Black is happy with the marked stones perfectly situated.]
+    )
+)
+    (;
+    W[qf]
+    C[I would play here right away.];
+    B[oe];W[qc]
+    )
+)
+    (;
+    B[dp];B[pd]
+    C[This variation is a 2 stone handicap game between a 2 dan and a 7 dan.  I will talk about the direction of play.];
+    W[dd];B[pp];W[cn];B[fq];W[qq]
+    C[AlphaGo!];
+    B[qp];W[pq];B[op];W[oq];B[np];W[pj];B[qh]
+    C[Correct direction -- push White toward Black's wall.];
+    W[mr];B[cl];W[cp];B[cq];W[bq]
+    (;
+    B[co]
+    C[Good direction.];
+    W[bp]
+    (;
+    B[do]
+    (;
+    W[dq]
+    C[White might chose differently.];
+    B[cr];W[dr];B[br];W[ar];B[bo]
+    C[After all this, Black takes the side that she wants in sente.];
+    W[cs];B[fc];W[lp];B[rq];W[rr];B[pl];W[rj];B[oh];W[nj];B[ml];W[qm];B[ql];W[rl];B[pm];W[rn];B[qn];W[rm];B[kk]
+    C[Black moves faster in the center, the game looks really good for Black. 
+
+A tip about direction of play:  Try to place your stones in the interesting area, and push his stones to the less interesting area.  We should choose the moves that make this idea happen.]
+    )
+        (;
+        W[bo]
+        C[I would choose this direction.]
+        (;
+        B[cr];W[dn]
+        C[White pushes Black to the lower side.]
+        TR[mr]
+        )
+            (;
+            B[dn];W[dq]
+            LB[dm:A]
+            C[Black might still take the outside, but in this case Black has a weakness at A.]
+            )
+        )
+    )
+        (;
+        B[bo]
+        C[Better direction.  This way Black makes sure that she will get the left side, which is more interesting.]
+        (;
+        W[dq];B[do];W[eq];B[ep];W[dr]
+        C[Joseki, but Black takes the left side in sente.];
+        B[pl]
+        )
+            (;
+            W[do]
+            C[What if White cuts?];
+            B[bn];W[dq];B[ep];W[dr];B[em]
+            C[Black's outside is super strong.]
+            )
+        )
+    )
+        (;
+        B[dq];W[bo];B[iq]
+        TR[mr]
+        C[This result is boring for Black.  Because of White's marked stone, the bottom side is not interesting.]
+        )
+    )
+)
+
