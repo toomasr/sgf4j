@@ -34,13 +34,14 @@ public class Game {
   }
 
   public void addProperty(String key, String value) {
-    /* Actually properties can be set multiple times and it seems based on
+    /*
+     * Actually properties can be set multiple times and it seems based on
      * other software that the expectation is that everything is appended rather
      * than the last definition wins.
      */
     if (properties.get(key) != null) {
       String current = properties.get(key);
-      properties.put(key, current+","+value);
+      properties.put(key, current + "," + value);
     }
     else {
       properties.put(key, value);
@@ -170,57 +171,75 @@ public class Game {
   }
 
   public boolean isSameGame(Game otherGame) {
-    if (this.equals(otherGame))
+    return isSameGame(otherGame, false);
+  }
+
+  public boolean isSameGame(Game otherGame, boolean verbose) {
+    if (this.equals(otherGame)) {
+      if (verbose) {
+        System.out.println("The very same game object - returning true");
+      }
       return true;
+    }
 
     // all root level properties have to match
     Map<String, String> reReadProps = otherGame.getProperties();
     if (properties.size() != reReadProps.size()) {
-      log.debug("Properties mismatch {} {}", properties.size(), otherGame.getProperties().size());
+      log.trace("Properties mismatch {} {}", properties.size(), otherGame.getProperties().size());
+      if (verbose) {
+        System.out.printf("Properties mismatch %s %s\n", properties.size(), otherGame.getProperties().size());
+      }
       return false;
     }
 
     for (Iterator<Map.Entry<String, String>> ite = properties.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
       if (!entry.getValue().equals(reReadProps.get(entry.getKey()))) {
-        log.debug("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
+        log.trace("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
         return false;
       }
     }
 
     // same number of nodes?
     if (this.getNoNodes() != otherGame.getNoNodes()) {
-      log.debug("Games have different no of nodes {} {}", this.getNoNodes(), otherGame.getNoNodes());
+      log.trace("Games have different no of nodes {} {}", this.getNoNodes(), otherGame.getNoNodes());
       return false;
     }
 
     // same number of moves?
     if (this.getNoMoves() != otherGame.getNoMoves()) {
-      log.debug("Games have different no of moves {} {}", this.getNoMoves(), otherGame.getNoMoves());
+      log.trace("Games have different no of moves {} {}", this.getNoMoves(), otherGame.getNoMoves());
       return false;
+    }
+    else if (verbose) {
+      System.out.println("Games have same number of moves " + this.getNoMoves());
     }
 
     // alrighty, lets check alllllll the moves
-    boolean allSame = compareAllNodes(this, this.getRootNode(), otherGame, otherGame.getRootNode());
-    if (!allSame) {
+    if (!doAllNodesEqual(this, this.getRootNode(), otherGame, otherGame.getRootNode())) {
       return false;
     }
 
     return true;
   }
 
-  private boolean compareAllNodes(Game game, GameNode node, Game otherGame, GameNode otherNode) {
+  private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode) {
     if (!node.equals(otherNode)) {
       return false;
     }
 
     GameNode nextNode = node.getNextNode();
     GameNode nextOtherNode = otherNode.getNextNode();
+
     if (nextNode != null) {
-      compareAllNodes(game, nextNode, otherGame, nextOtherNode);
+      doAllNodesEqual(game, nextNode, otherGame, nextOtherNode);
     }
     // if nextNode is null lets make sure the other one is too
     else if (nextNode != nextOtherNode) {
+      return false;
+    }
+
+    if (!nextNode.equals(nextOtherNode)) {
       return false;
     }
 
@@ -236,7 +255,7 @@ public class Game {
     for (; ite.hasNext();) {
       GameNode childNode = ite.next();
       GameNode otherChildNode = otherIte.next();
-      if (!compareAllNodes(game, childNode, otherGame, otherChildNode)) {
+      if (!doAllNodesEqual(game, childNode, otherGame, otherChildNode)) {
         return false;
       }
     }
