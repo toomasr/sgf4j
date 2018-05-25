@@ -41,6 +41,12 @@ public class TestSaveSgf {
     verifyGame(sgfPath);
   }
 
+  @Test
+  public void testProblematic011() throws Exception {
+    Path sgfPath = Paths.get("./src/test/resources/problematic-011.sgf");
+    verifyGame(sgfPath);
+  }
+
   /*
    * Create a Game object. Save to file. Create a new game object.
    * Compare the first and last and see if our writing is working.
@@ -65,6 +71,16 @@ public class TestSaveSgf {
     boolean result = game.isSameGame(reReadGame);
     if (!result) {
       File tmpFile = Sgf.writeToFile(game.getOriginalSgf());
+      System.out.println("Parsing information:");
+      game.isSameGame(reReadGame, true);
+      System.out.println();
+      System.out.println("ORIGINAL");
+      System.out.println(game.getOriginalSgf());
+      System.out.println("/ORIGINAL");
+      System.out.println();
+      System.out.println("NEW");
+      System.out.println(reReadGame.getOriginalSgf());
+      System.out.println("/NEW");
       Assert.assertTrue("Problem with game. SGF written to " + tmpFile.getAbsolutePath(), result);
     }
   }
