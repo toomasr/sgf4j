@@ -196,6 +196,9 @@ public class Game {
       Map.Entry<String, String> entry = ite.next();
       if (!entry.getValue().equals(reReadProps.get(entry.getKey()))) {
         log.trace("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
+        if (verbose) {
+          System.out.printf("Property mismatch %s='%s' '%s'", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
+        }
         return false;
       }
     }
@@ -203,6 +206,9 @@ public class Game {
     // same number of nodes?
     if (this.getNoNodes() != otherGame.getNoNodes()) {
       log.trace("Games have different no of nodes {} {}", this.getNoNodes(), otherGame.getNoNodes());
+      if (verbose) {
+        System.out.printf("Games have different no of nodes old=%s new=%s", this.getNoNodes(), otherGame.getNoNodes());
+      }
       return false;
     }
 
