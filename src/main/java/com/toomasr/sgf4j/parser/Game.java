@@ -279,4 +279,55 @@ public class Game {
   public void setOriginalSgf(String originalSgf) {
     this.originalSgf = originalSgf;
   }
+
+  public String getGeneratedSgf() {
+    StringBuilder rtrn = new StringBuilder();
+    rtrn.append("(");
+
+    // lets write all the root node properties
+    Map<String, String> props = getProperties();
+    if (props.size() > 0) {
+      rtrn.append(";");
+    }
+
+    for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
+      Map.Entry<String, String> entry = ite.next();
+      rtrn.append(entry.getKey() + "[" + entry.getValue() + "]");
+    }
+
+    populateSgf(getRootNode(), rtrn);
+
+    rtrn.append(")");
+    return rtrn.toString();
+  }
+
+  private void populateSgf(GameNode node, StringBuilder sgfString) {
+    // print out the node
+    sgfString.append(";");
+    for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
+      Map.Entry<String, String> entry = ite.next();
+      sgfString.append(entry.getKey() + "[" + entry.getValue() + "]");
+    }
+    sgfString.append("\n");
+
+    // if we have children then first print out the
+    // getNextNode() and then the rest of the children
+    if (node.hasChildren()) {
+      sgfString.append("(");
+      populateSgf(node.getNextNode(), sgfString);
+      sgfString.append(")");
+      sgfString.append("\n");
+
+      for (GameNode childNode : node.getChildren()) {
+        sgfString.append("(");
+        populateSgf(childNode, sgfString);
+        sgfString.append(")");
+        sgfString.append("\n");
+      }
+    }
+    // we can just continue with the next elem
+    else if (node.getNextNode() != null){
+      populateSgf(node.getNextNode(), sgfString);
+    }
+  }
 }
