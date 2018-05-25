@@ -11,11 +11,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.Map;
-
+import java.nio.file.Paths;
 import com.toomasr.sgf4j.parser.Game;
-import com.toomasr.sgf4j.parser.GameNode;
 
 public class Sgf {
   private Parser parser;
@@ -70,33 +67,26 @@ public class Sgf {
   }
 
   public static void writeToFile(Game game, Path destination) {
+    writeToFile(game, destination, "UTF-8");
+  }
+
+  public static void writeToFile(Game game, Path destination, String encoding, boolean keepOriginal) {
+    if (keepOriginal) {
+      Path copyOfOriginal = Paths.get(destination.toString() + ".orig." + System.currentTimeMillis());
+      try {
+        Files.copy(destination, copyOfOriginal);
+      }
+      catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    writeToFile(game, destination, encoding);
+  }
+
+  public static void writeToFile(Game game, Path destination, String encoding) {
     try (
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(destination.toFile()), Charset.forName("UTF-8").newEncoder())) {
-
-      osw.write("(");
-
-      // lets write all the root node properties
-      Map<String, String> props = game.getProperties();
-      if (props.size() > 0) {
-        osw.write(";");
-      }
-
-      for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
-        Map.Entry<String, String> entry = ite.next();
-        osw.write(entry.getKey() + "[" + entry.getValue() + "]");
-      }
-      GameNode node = game.getRootNode();
-      do {
-        osw.write(";");
-        for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
-          Map.Entry<String, String> entry = ite.next();
-          osw.write(entry.getKey() + "[" + entry.getValue() + "]");
-        }
-        osw.write("\n");
-        // System.out.println(node);
-      }
-      while ((node = node.getNextNode()) != null);
-      osw.write(")");
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(destination.toFile()), Charset.forName(encoding).newEncoder())) {
+      osw.write(game.getGeneratedSgf());
     }
     catch (IOException e) {
       throw new RuntimeException(e);
