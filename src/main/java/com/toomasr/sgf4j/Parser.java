@@ -356,11 +356,13 @@ public class Parser {
         }
       }
       else if (generalProps.contains(key) || nodeProps.contains(key)) {
-        if (generalProps.contains(key))
+        if (generalProps.contains(key) && parentNode == null) {
           game.addProperty(key, cleanValue(value));
+        }
 
-        if (nodeProps.contains(key))
+        if (nodeProps.contains(key) && parentNode != null) {
           rtrnNode.addProperty(key, cleanValue(value));
+        }
       }
       else if ("L".equals(key)) {
         log.debug("Not handling " + key + " = " + value);
