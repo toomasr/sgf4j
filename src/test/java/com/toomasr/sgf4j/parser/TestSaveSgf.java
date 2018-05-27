@@ -46,17 +46,28 @@ public class TestSaveSgf {
     Path sgfPath = Paths.get("./src/test/resources/problematic-011.sgf");
     verifyGame(sgfPath);
   }
-
-  /*
-   * Create a Game object. Save to file. Create a new game object.
-   * Compare the first and last and see if our writing is working.
-   */
-  private void verifyGame(Path sgfPath) throws Exception {
-    Game game = Sgf.createFromPath(sgfPath);
-    TestSaveSgf.verifyGame(game);
+  
+  @Test
+  public void testProblematic012() throws Exception {
+    Path sgfPath = Paths.get("./src/test/resources/problematic-012.sgf");
+    verifyGame(sgfPath, false);
   }
 
+  private void verifyGame(Path sgfPath) throws Exception {
+    Game game = Sgf.createFromPath(sgfPath);
+    TestSaveSgf.verifyGame(game, false);
+  }
+  
+  private void verifyGame(Path sgfPath, boolean verbose) throws Exception {
+    Game game = Sgf.createFromPath(sgfPath);
+    TestSaveSgf.verifyGame(game, verbose);
+  }
+  
   public static void verifyGame(Game game) {
+    verifyGame(game, false);
+  }
+
+  public static void verifyGame(Game game, boolean verbose) {
     File file = null;
     try {
       file = File.createTempFile("sgf4j-test-", ".sgf");
@@ -69,7 +80,7 @@ public class TestSaveSgf {
 
     Game reReadGame = Sgf.createFromPath(file.toPath());
     boolean result = game.isSameGame(reReadGame);
-    if (!result) {
+    if (!result || verbose) {
       File tmpFile = Sgf.writeToFile(game.getOriginalSgf());
       System.out.println("Parsing information:");
       game.isSameGame(reReadGame, true);
@@ -81,7 +92,8 @@ public class TestSaveSgf {
       System.out.println("NEW");
       System.out.println(reReadGame.getOriginalSgf());
       System.out.println("/NEW");
-      Assert.assertTrue("Problem with game. SGF written to " + tmpFile.getAbsolutePath(), result);
+      if (!result)
+        Assert.assertTrue("Problem with game. SGF written to " + tmpFile.getAbsolutePath(), result);
     }
   }
 }
