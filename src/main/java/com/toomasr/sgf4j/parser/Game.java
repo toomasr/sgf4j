@@ -215,6 +215,8 @@ public class Game {
     // same number of moves?
     if (this.getNoMoves() != otherGame.getNoMoves()) {
       log.trace("Games have different no of moves {} {}", this.getNoMoves(), otherGame.getNoMoves());
+      if (verbose)
+        System.out.println("Games have different number of moves " + this.getNoMoves()+" "+otherGame.getNoMoves());
       return false;
     }
     else if (verbose) {
@@ -222,14 +224,16 @@ public class Game {
     }
 
     // alrighty, lets check alllllll the moves
-    if (!doAllNodesEqual(this, this.getRootNode(), otherGame, otherGame.getRootNode())) {
+    if (!doAllNodesEqual(this, this.getRootNode(), otherGame, otherGame.getRootNode(), verbose)) {
+      if (verbose)
+        System.out.println("Some nodes don't equal");
       return false;
     }
 
     return true;
   }
 
-  private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode) {
+  private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode, boolean verbose) {
     if (!node.equals(otherNode)) {
       return false;
     }
@@ -240,14 +244,23 @@ public class Game {
 
     if (nextNode != null) {
       if (!nextNode.equals(nextOtherNode)) {
+        if (verbose) {
+          System.out.println("Nodes don't equal");
+          System.out.println(nextNode);
+          System.out.println(nextOtherNode);
+          System.out.println();
+        }
         return false;
       }
 
-      if (!doAllNodesEqual(game, nextNode, otherGame, nextOtherNode)) {
+      if (!doAllNodesEqual(game, nextNode, otherGame, nextOtherNode, verbose)) {
         return false;
       }
     }
     else if (nextNode == null && nextOtherNode != null) {
+      if (verbose) {
+        System.out.println("Nodes don't equal node="+nextNode+" otherNode="+nextOtherNode);
+      }
       return false;
     }
 
@@ -256,6 +269,9 @@ public class Game {
     Set<GameNode> otherChildren = otherNode.getChildren();
 
     if (!children.equals(otherChildren)) {
+      if (verbose) {
+        System.out.println("Children don't equal node="+children+" otherNode="+otherChildren);
+      }
       return false;
     }
 
@@ -264,7 +280,7 @@ public class Game {
     for (; ite.hasNext();) {
       GameNode childNode = ite.next();
       GameNode otherChildNode = otherIte.next();
-      if (!doAllNodesEqual(game, childNode, otherGame, otherChildNode)) {
+      if (!doAllNodesEqual(game, childNode, otherGame, otherChildNode, verbose)) {
         return false;
       }
     }
