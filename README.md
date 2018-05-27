@@ -15,7 +15,7 @@ The project is synced to Maven Central and to use it just include it in your `po
   <dependency>
     <groupId>com.toomasr</groupId>
     <artifactId>sgf4j-parser</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
   </dependency>
 <dependencies>
 ```
