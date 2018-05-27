@@ -22,7 +22,7 @@ public class TestUtil extends TestCase {
 
     Game game1 = Sgf.createFromPath(gameSgf1);
     Game game2 = Sgf.createFromPath(gameSgf2);
-    assertFalse(game1.isSameGame(game2, true));
+    assertFalse(game1.isSameGame(game2));
   }
 
 }
