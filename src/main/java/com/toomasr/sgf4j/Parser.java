@@ -55,7 +55,7 @@ public class Parser {
     // Name of the event extended
     // Extended info about the event
     generalProps.add("EVX");
-    // Rount number
+    // Round number
     generalProps.add("RO");
     // Rules
     generalProps.add("RU");
@@ -160,6 +160,11 @@ public class Parser {
     // some go program info probably
     generalProps.add("GOGGPFF");
     generalProps.add("GOGGPAP");
+    // these are actually node properties
+    // but there are games where they are
+    // part of the game properites - go figure!
+    generalProps.add("L");
+    generalProps.add("B");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
@@ -356,16 +361,15 @@ public class Parser {
         }
       }
       else if (generalProps.contains(key) || nodeProps.contains(key)) {
+        boolean addedToGame = false;
         if (generalProps.contains(key) && parentNode == null) {
           game.addProperty(key, cleanValue(value));
+          addedToGame = true;
         }
 
-        if (nodeProps.contains(key) && parentNode != null) {
+        if (nodeProps.contains(key) && !addedToGame) {
           rtrnNode.addProperty(key, cleanValue(value));
         }
-      }
-      else if ("L".equals(key)) {
-        log.debug("Not handling " + key + " = " + value);
       }
       else {
         // log.error("Not able to parse property '" + m.group(1) + "'=" + m.group(2) + ". Found it from " + m.group(0));
