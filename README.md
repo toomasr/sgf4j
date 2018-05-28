@@ -22,7 +22,7 @@ The project is synced to Maven Central and to use it just include it in your `po
 <dependencies>
 ```
 
-Parsing from File
+Parsing from file
 =================
 
 Simple parsing looks like this. You either have a SGF file in a String or a Path of the location of the file. You create a Game object of it and then start walking the nodes from the root node. There are methods to start from the end too.
@@ -39,7 +39,7 @@ Simple parsing looks like this. You either have a SGF file in a String or a Path
 
 Remember that not every node is an actual move. Also note that a node might have multiple children. I have built it in a way that `node.getNextMove()` returns the next move in the main line of play while getChildren() will return the rest of the possible next moves.
 
-Writing to File
+Writing to file
 ===============
 
 Once you have parsed a file into a Game object you can also write it back to a SGF file.
