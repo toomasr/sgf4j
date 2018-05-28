@@ -304,6 +304,9 @@ public class Parser {
         else if ('\n' == chr) {
           // skip newlines
         }
+        else if ('\r' == chr) {
+          // skip newlines
+        }
         else if (';' != chr && ')' != chr && '(' != chr) {
           rtrn.append(chr);
         }
