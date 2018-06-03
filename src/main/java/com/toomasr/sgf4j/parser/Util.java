@@ -100,13 +100,13 @@ public class Util {
       if (blackStones[i].contains(":")) {
         String[] seq = blackStones[i].split(":");
         if (seq[0].charAt(0) == seq[1].charAt(0)) {
-          for (int j = Util.alphaToCoord.get(seq[0].charAt(1)+""); j <= Util.alphaToCoord.get(seq[1].charAt(1)+""); j++) {
+          for (int j = Util.alphaToCoord.get(seq[0].charAt(1) + ""); j <= Util.alphaToCoord.get(seq[1].charAt(1) + ""); j++) {
             rtrn.add(seq[0].charAt(0) + coordToAlpha.get(j));
           }
         }
         else {
-          for (int j = Util.alphaToCoord.get(seq[0].charAt(0)+""); j <= Util.alphaToCoord.get(seq[1].charAt(0)+""); j++) {
-            rtrn.add(coordToAlpha.get(j)+seq[0].charAt(1));
+          for (int j = Util.alphaToCoord.get(seq[0].charAt(0) + ""); j <= Util.alphaToCoord.get(seq[1].charAt(0) + ""); j++) {
+            rtrn.add(coordToAlpha.get(j) + seq[0].charAt(1));
           }
         }
       }
