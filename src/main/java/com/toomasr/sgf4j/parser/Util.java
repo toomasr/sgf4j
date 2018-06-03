@@ -116,4 +116,33 @@ public class Util {
     }
     return rtrn.toArray(new String[] {});
   }
+
+  public static String sgfEscapeText(String input) {
+    // some helpers I used for parsing needs to be undone - see the Parser.java
+    // in sgf4j project
+    input = input.replaceAll("\\\\\\[", "@@@@@");
+    input = input.replaceAll("\\\\\\]", "#####");
+
+    // lets do some replacing - see http://www.red-bean.com/sgf/sgf4.html#text
+    input = input.replaceAll(":", "\\\\:");
+    input = input.replaceAll("\\]", "\\\\]");
+    input = input.replaceAll("\\[", "\\\\[");
+
+    return input;
+  }
+
+  public static String sgfUnescapeText(String input) {
+    // some helpers I used for parsing needs to be undone - see the Parser.java
+    // in sgf4j project
+    input = input.replaceAll("@@@@@", "\\\\\\[");
+    input = input.replaceAll("#####", "\\\\\\]");
+
+    // lets do some replacing - see http://www.red-bean.com/sgf/sgf4.html#text
+    input = input.replaceAll("\\\\\n", "");
+    input = input.replaceAll("\\\\:", ":");
+    input = input.replaceAll("\\\\\\]", "]");
+    input = input.replaceAll("\\\\\\[", "[");
+
+    return input;
+  }
 }
