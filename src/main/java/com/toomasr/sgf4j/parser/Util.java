@@ -117,6 +117,12 @@ public class Util {
     return rtrn.toArray(new String[] {});
   }
 
+  /**
+   * Convert text into SGF escaped sequence.
+   *
+   * @param input normal text from user
+   * @return SGF escaped text
+   */
   public static String sgfEscapeText(String input) {
     // some helpers I used for parsing needs to be undone - see the Parser.java
     // in sgf4j project
@@ -131,6 +137,12 @@ public class Util {
     return input;
   }
 
+  /**
+   * Convert SGF escaped text into end user display text
+   *
+   * @param input text from SGF
+   * @return text to show for end user
+   */
   public static String sgfUnescapeText(String input) {
     // some helpers I used for parsing needs to be undone - see the Parser.java
     // in sgf4j project
