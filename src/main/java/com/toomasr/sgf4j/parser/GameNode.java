@@ -22,6 +22,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private GameNode parentNode;
   private GameNode nextNode = null;
   private GameNode prevNode = null;
+  private int id;
 
   /**
    * Constructs a new node with the argument as the parent.
@@ -265,5 +266,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public int getNodeNo() {
     return this.nodeNo;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 }

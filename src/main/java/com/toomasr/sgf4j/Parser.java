@@ -233,6 +233,7 @@ public class Parser {
     // replace token delimiters
 
     int moveNo = 1;
+    int id = 10000;
 
     for (int i = 0; i < originalGame.length(); i++) {
       char chr = originalGame.charAt(i);
@@ -240,7 +241,7 @@ public class Parser {
         String nodeContents = consumeUntil(originalGame, i);
         i = i + nodeContents.length();
 
-        GameNode node = parseToken(nodeContents, parentNode, game);
+        GameNode node = parseToken(nodeContents, parentNode, game, id++);
         if (node.isMove()) {
           node.setMoveNo(moveNo++);
         }
@@ -318,8 +319,9 @@ public class Parser {
     return rtrn.toString().trim();
   }
 
-  private GameNode parseToken(String token, final GameNode parentNode, Game game) {
+  private GameNode parseToken(String token, final GameNode parentNode, Game game, int id) {
     GameNode rtrnNode = new GameNode(parentNode);
+    rtrnNode.setId(id);
     // replace delimiters
     token = Parser.prepareToken("'" + token + "'");
 
