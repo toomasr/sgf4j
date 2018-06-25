@@ -149,19 +149,26 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     return super.clone();
   }
 
+  /*
+   * Don't add id to the list. The id is generated during parsing
+   * is more like transient.
+   * */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((children == null) ? 0 : children.hashCode());
     result = prime * result + moveNo;
-    result = prime * result + id;
     result = prime * result + ((parentNode == null) ? 0 : parentNode.properties.hashCode());
     result = prime * result + ((properties == null) ? 0 : properties.hashCode());
     result = prime * result + visualDepth;
     return result;
   }
 
+  /*
+   * Don't add id to the list. The id is generated during parsing
+   * is more like transient.
+   * */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -178,8 +185,6 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     else if (!children.equals(other.children))
       return false;
     if (moveNo != other.moveNo)
-      return false;
-    if (id != other.id)
       return false;
     if (parentNode == null) {
       if (other.parentNode != null)
