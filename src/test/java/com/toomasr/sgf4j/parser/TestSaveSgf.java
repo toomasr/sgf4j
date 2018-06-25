@@ -46,7 +46,7 @@ public class TestSaveSgf {
     Path sgfPath = Paths.get("./src/test/resources/problematic-011.sgf");
     verifyGame(sgfPath);
   }
-  
+
   @Test
   public void testProblematic012() throws Exception {
     Path sgfPath = Paths.get("./src/test/resources/problematic-012.sgf");
@@ -57,12 +57,12 @@ public class TestSaveSgf {
     Game game = Sgf.createFromPath(sgfPath);
     TestSaveSgf.verifyGame(game, false);
   }
-  
+
   private void verifyGame(Path sgfPath, boolean verbose) throws Exception {
     Game game = Sgf.createFromPath(sgfPath);
     TestSaveSgf.verifyGame(game, verbose);
   }
-  
+
   public static void verifyGame(Game game) {
     verifyGame(game, false);
   }
