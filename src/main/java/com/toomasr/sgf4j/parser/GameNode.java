@@ -238,6 +238,10 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public GameNode getNextNode() {
     return nextNode;
   }
+  
+  public void setNextNode(GameNode nextNode) {
+    this.nextNode = nextNode;
+  }
 
   public GameNode getPrevNode() {
     return prevNode;
@@ -274,6 +278,10 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public int getNodeNo() {
     return this.nodeNo;
+  }
+  
+  public String getSgfComment() {
+  	return properties.getOrDefault("C", "");
   }
 
   public void setId(int id) {
