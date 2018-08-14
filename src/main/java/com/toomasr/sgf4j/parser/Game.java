@@ -94,9 +94,12 @@ public class Game {
       newRoot.addChild(oldRoot);
       setRootNode(newRoot);
     }
+    
+    GameNode node = getRootNode();
+    heuristicalBranchReorder(node);
 
     // count the moves & nodes
-    GameNode node = getRootNode();
+    node = getRootNode();
     do {
       if (node.isMove()) {
         noMoves++;
@@ -113,7 +116,41 @@ public class Game {
     helper.calculateVisualDepth(getLastMove(), 1);
   }
 
-  private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
+  /*
+   * This is a funny logic that I added because my teacher would
+   * send me SGF files where very often a variation that should have
+   * been the mainline actually ended up being a branch.
+   * 
+   * So I'm looking for the string "answer" in the comment of the child
+   * nodes and if I find it I swap this with the main line.
+   */
+  private void heuristicalBranchReorder(GameNode node) {
+  	do {
+  		GameNode tmpNode = node.getNextNode();
+  		Set<GameNode> children = node.getChildren();
+      
+  		if (node.isMove() && tmpNode != null) {
+  			GameNode newMainLine = null;
+      	for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
+					GameNode gameNode = ite.next();
+					System.out.println(gameNode.getSgfComment());
+					if (gameNode.getSgfComment().toLowerCase().contains("answer")) {
+						newMainLine = gameNode;
+					}
+				}
+      	if (newMainLine != null) {
+      		children.remove(newMainLine);
+      		children.add(node.getNextNode());
+      		node.getNextNode().setPrevNode(null);
+      		node.setNextNode(newMainLine);
+      		newMainLine.setPrevNode(node);
+      	}
+      }
+    }
+    while (((node = node.getNextNode()) != null));
+	}
+
+	private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
     GameNode node = startNode;
     int nextMoveNo = moveNo;
     int nextNodeNo = nodeNo;
