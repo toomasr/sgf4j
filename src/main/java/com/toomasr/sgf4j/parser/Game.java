@@ -96,7 +96,10 @@ public class Game {
     }
 
     GameNode node = getRootNode();
-    heuristicalBranchReorder(node);
+    // I'll need to figure out if and how to add the heuristical
+    // reorder. This can be bad as right now it will have side-effects
+    // when saving the game.
+    //heuristicalBranchReorder(node);
 
     // count the moves & nodes
     node = getRootNode();
