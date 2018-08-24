@@ -94,7 +94,7 @@ public class Game {
       newRoot.addChild(oldRoot);
       setRootNode(newRoot);
     }
-    
+
     GameNode node = getRootNode();
     heuristicalBranchReorder(node);
 
@@ -120,7 +120,7 @@ public class Game {
    * This is a funny logic that I added because my teacher would
    * send me SGF files where very often a variation that should have
    * been the mainline actually ended up being a branch.
-   * 
+   *
    * So I'm looking for the string "answer" in the comment of the child
    * nodes and if I find it I swap this with the main line.
    */
@@ -128,12 +128,11 @@ public class Game {
   	do {
   		GameNode tmpNode = node.getNextNode();
   		Set<GameNode> children = node.getChildren();
-      
+
   		if (node.isMove() && tmpNode != null) {
   			GameNode newMainLine = null;
       	for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
 					GameNode gameNode = ite.next();
-					System.out.println(gameNode.getSgfComment());
 					if (gameNode.getSgfComment().toLowerCase().contains("answer")) {
 						newMainLine = gameNode;
 					}
