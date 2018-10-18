@@ -14,6 +14,7 @@ import com.toomasr.sgf4j.board.StoneState;
 public class GameNode implements Comparable<GameNode>, Cloneable {
   private final Set<GameNode> children = new TreeSet<>();
   private final Map<String, String> properties = new HashMap<>();
+  private final Map<String, String> updatedProperties = new HashMap<>();
 
   private int moveNo = -1;
   private int nodeNo = -1;
@@ -35,6 +36,14 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public void addProperty(String key, String value) {
     properties.put(key, value);
+  }
+
+  public String getUpdatedProperty(String key) {
+    return updatedProperties.get(key);
+  }
+
+  public void addUpdatedProperty(String key, String value) {
+    updatedProperties.put(key, value);
   }
 
   public String getProperty(String key) {
