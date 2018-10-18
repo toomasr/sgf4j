@@ -45,6 +45,33 @@ public class VirtualBoard {
     playMove(move, prevMove);
   }
 
+  public void undoMove(GameNode moveNode, GameNode prevMove) {
+    if (!moveNode.isPass() && !moveNode.isPlacementMove()) {
+      String currMoveStr = moveNode.getMoveString();
+      int[] moveCoords = Util.alphaToCoords(currMoveStr);
+      removeStone(moveCoords[0], moveCoords[1]);
+    }
+
+    // if the move that we are taking back happened to remove
+    // stones on the board and now the move is undone we need
+    // to put those stones back
+    Set<Group> removedGroups = moveToRemovedGroups.get(moveNode);
+    if (removedGroups != null) {
+      for (Iterator<Group> ite = removedGroups.iterator(); ite.hasNext();) {
+        Group group = ite.next();
+        for (Iterator<Square> ite2 = group.stones.iterator(); ite2.hasNext();) {
+          Square square = ite2.next();
+          placeStone(square);
+        }
+      }
+    }
+
+    for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
+      BoardListener boardListener = ite.next();
+      boardListener.undoMove(moveNode, prevMove);
+    }
+  }
+
   public void placeStone(StoneState color, int x, int y) {
     this.vBoard[x][y] = new Square(color, x, y);
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
@@ -228,32 +255,5 @@ public class VirtualBoard {
 
   public void addBoardListener(BoardListener listener) {
     this.boardListeners.add(listener);
-  }
-
-  public void undoMove(GameNode moveNode, GameNode prevMove) {
-    if (!moveNode.isPass() && !moveNode.isPlacementMove()) {
-      String currMoveStr = moveNode.getMoveString();
-      int[] moveCoords = Util.alphaToCoords(currMoveStr);
-      removeStone(moveCoords[0], moveCoords[1]);
-    }
-
-    // if the move that we are taking back happened to remove
-    // stones on the board and now the move is undone we need
-    // to put those stones back
-    Set<Group> removedGroups = moveToRemovedGroups.get(moveNode);
-    if (removedGroups != null) {
-      for (Iterator<Group> ite = removedGroups.iterator(); ite.hasNext();) {
-        Group group = ite.next();
-        for (Iterator<Square> ite2 = group.stones.iterator(); ite2.hasNext();) {
-          Square square = ite2.next();
-          placeStone(square);
-        }
-      }
-    }
-
-    for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
-      BoardListener boardListener = ite.next();
-      boardListener.undoMove(moveNode, prevMove);
-    }
   }
 }
