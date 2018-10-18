@@ -73,7 +73,6 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
       return properties.get("B");
     }
     else {
-      //throw new RuntimeException("Unable to extract move from " + properties.toString());
       return null;
     }
   }
@@ -161,7 +160,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   /*
    * Don't add id to the list. The id is generated during parsing
    * is more like transient.
-   * */
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -177,7 +176,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   /*
    * Don't add id to the list. The id is generated during parsing
    * is more like transient.
-   * */
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -247,7 +246,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public GameNode getNextNode() {
     return nextNode;
   }
-  
+
   public void setNextNode(GameNode nextNode) {
     this.nextNode = nextNode;
   }
@@ -288,9 +287,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public int getNodeNo() {
     return this.nodeNo;
   }
-  
+
   public String getSgfComment() {
-  	return properties.getOrDefault("C", "");
+    return properties.getOrDefault("C", "");
   }
 
   public void setId(int id) {
