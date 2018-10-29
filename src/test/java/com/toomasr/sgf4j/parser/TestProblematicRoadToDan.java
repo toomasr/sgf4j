@@ -21,4 +21,13 @@ public class TestProblematicRoadToDan extends TestCase {
     // once the AW props are concatenated it becomes longer
     assertEquals(23, game.getProperty("AW").length());
   }
+
+  @Test
+  public void testParseProblematic013() throws Exception {
+    Path path = Paths.get("./src/test/resources/problematic-013.sgf");
+    String gameAsString = new String(Files.readAllBytes(path));
+    Parser parser = new Parser(gameAsString);
+    Game game = parser.parse();
+    game.postProcess();
+  }
 }

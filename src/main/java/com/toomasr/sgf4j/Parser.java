@@ -165,6 +165,9 @@ public class Parser {
     // part of the game properites - go figure!
     generalProps.add("L");
     generalProps.add("B");
+    // see problematic-013.sgf - I think this is white score and black score
+    generalProps.add("BS");
+    generalProps.add("WS");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
