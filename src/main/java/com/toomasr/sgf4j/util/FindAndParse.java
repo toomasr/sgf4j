@@ -12,6 +12,10 @@ import com.toomasr.sgf4j.Sgf;
 
 public class FindAndParse {
   public static void main(String[] args) throws IOException {
+    if (args.length == 0) {
+      System.out.println("Please provider folder to start from");
+      System.exit(0);
+    }
     Path path = Paths.get(args[0]);
     System.out.println(path.toAbsolutePath());
 
@@ -22,8 +26,8 @@ public class FindAndParse {
         if (attr.isRegularFile() && file.getFileName().toString().toLowerCase().endsWith("sgf")) {
 
           try {
+            System.out.println("Parsing "+file);
             Sgf.createFromPath(file);
-
           }
           catch (Exception e) {
             System.out.format("Parsing %s\n", file);
