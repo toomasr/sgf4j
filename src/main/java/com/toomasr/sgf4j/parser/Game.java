@@ -273,7 +273,10 @@ public class Game {
   }
 
   private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode, boolean verbose) {
-    if (!node.equals(otherNode)) {
+    if (!node.isSameNode(otherNode)) {
+      if (verbose) {
+        System.out.println("Nodes don't equal a="+node+"\nb="+otherGame);
+      }
       return false;
     }
 
@@ -282,7 +285,7 @@ public class Game {
     GameNode nextOtherNode = otherNode.getNextNode();
 
     if (nextNode != null) {
-      if (!nextNode.equals(nextOtherNode)) {
+      if (!nextNode.isSameNode(nextOtherNode)) {
         if (verbose) {
           System.out.println("Nodes don't equal");
           System.out.println(nextNode);
@@ -307,11 +310,27 @@ public class Game {
     Set<GameNode> children = node.getChildren();
     Set<GameNode> otherChildren = otherNode.getChildren();
 
-    if (!children.equals(otherChildren)) {
+    if (children.size() != otherChildren.size()) {
       if (verbose) {
-        System.out.println("Children don't equal node="+children+" otherNode="+otherChildren);
+        System.out.println("Size of children don't equal node="+children+" otherNode="+otherChildren);
       }
       return false;
+    }
+
+    for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
+      GameNode gameNode = ite.next();
+      boolean found = false;
+      for (Iterator<GameNode> ite2 = otherChildren.iterator(); ite2.hasNext();) {
+        GameNode gameNode2 = ite2.next();
+        if (gameNode.isSameNode(gameNode2))
+          found = true;
+      }
+      if (!found) {
+        if (verbose) {
+          System.out.println("Children don't equal node="+children+" otherNode="+otherChildren);
+        }
+        return false;
+      }
     }
 
     Iterator<GameNode> ite = children.iterator();

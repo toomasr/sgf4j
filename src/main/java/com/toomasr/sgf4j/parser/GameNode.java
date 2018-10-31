@@ -1,6 +1,7 @@
 package com.toomasr.sgf4j.parser;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -157,26 +158,19 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     return super.clone();
   }
 
-  /*
-   * Don't add id to the list. The id is generated during parsing
-   * is more like transient.
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((children == null) ? 0 : children.hashCode());
     result = prime * result + moveNo;
+    result = prime * result + id;
     result = prime * result + ((parentNode == null) ? 0 : parentNode.properties.hashCode());
     result = prime * result + ((properties == null) ? 0 : properties.hashCode());
     result = prime * result + visualDepth;
     return result;
   }
 
-  /*
-   * Don't add id to the list. The id is generated during parsing
-   * is more like transient.
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -199,6 +193,65 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
         return false;
     }
     else if (!parentNode.equals(other.parentNode))
+      return false;
+    if (properties == null) {
+      if (other.properties != null)
+        return false;
+    }
+    else if (!properties.equals(other.properties))
+      return false;
+    if (visualDepth != other.visualDepth)
+      return false;
+    if (id != other.id)
+      return false;
+    return true;
+  }
+
+  /**
+   * Similar to equals but doesn't include the ID fiel which is auto-assigned
+   * during parsing and can be system and time dependent. Method is meant
+   * to compare nodes for all the properties worth while equals method
+   * is good to compare objects.
+   *
+   * @param otherNode
+   * @return
+   */
+  public boolean isSameNode(GameNode otherNode) {
+    if (this == otherNode)
+      return true;
+    if (otherNode == null)
+      return false;
+    if (getClass() != otherNode.getClass())
+      return false;
+    GameNode other = (GameNode) otherNode;
+
+    if (children == null) {
+      if (other.children != null)
+        return false;
+    }
+    else {
+      for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
+        GameNode gameNode = (GameNode) ite.next();
+        boolean found = false;
+        for (Iterator<GameNode> ite2 = children.iterator(); ite2.hasNext();) {
+          GameNode gameNode2 = (GameNode) ite2.next();
+          if (gameNode.isSameNode(gameNode2)) {
+            found = true;
+            break;
+          }
+        }
+        if (!found)
+          return false;
+      }
+    }
+
+    if (moveNo != other.moveNo)
+      return false;
+    if (parentNode == null) {
+      if (other.parentNode != null)
+        return false;
+    }
+    else if (!parentNode.isSameNode(other.parentNode))
       return false;
     if (properties == null) {
       if (other.properties != null)
