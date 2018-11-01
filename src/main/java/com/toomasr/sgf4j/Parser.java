@@ -168,6 +168,8 @@ public class Parser {
     // see problematic-013.sgf - I think this is white score and black score
     generalProps.add("BS");
     generalProps.add("WS");
+    // not sure what this is is but found it in a SGF file
+    generalProps.add("MU");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
