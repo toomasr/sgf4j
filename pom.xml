@@ -4,7 +4,7 @@
   <name>SGF Parser for Java</name>
   <groupId>com.toomasr</groupId>
   <artifactId>sgf4j-parser</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.5</version>
 
   <scm>
     <connection>scm:git:git@github.com:toomasr/sgf4j.git</connection>
