@@ -99,17 +99,60 @@ public class Game {
     // I'll need to figure out if and how to add the heuristical
     // reorder. This can be bad as right now it will have side-effects
     // when saving the game.
-    //heuristicalBranchReorder(node);
+    // heuristicalBranchReorder(node);
 
     // count the moves & nodes
+    // also calculate the times if possible
+    double prevBL = -1;
+    long prevBlTime = 0;
+    double prevWL = -1;
+    long prevWlTime = 0;
+
     node = getRootNode();
     do {
       if (node.isMove()) {
         noMoves++;
       }
       noNodes++;
-    }
-    while (((node = node.getNextNode()) != null));
+
+      // TIME RELATED LOGIC
+      String bl = node.getProperty("BL");
+      String wl = node.getProperty("WL");
+      if (bl != null) {
+        try {
+          double curDouble = Double.parseDouble(bl);
+          if (prevBL != -1) {
+            prevBlTime = Math.round(prevBL - curDouble);
+          }
+          if (prevBlTime < 0) {
+            prevBlTime = Math.round(prevBL);
+          }
+          prevBL = curDouble;
+          node.addProperty("TimeSpentOnMove", prevBlTime+"");
+        } catch (NumberFormatException e) {
+          // can ignore this, property won't be set
+        }
+      }
+
+      if (wl != null) {
+        try {
+          double curDouble = Double.parseDouble(wl);
+          String msg = "";
+          if (prevWL != -1) {
+            prevWlTime = Math.round(prevWL - curDouble);
+          }
+          if (prevWlTime < 0) {
+            prevWlTime = Math.round(prevWL);
+          }
+          prevWL = curDouble;
+          node.addProperty("TimeSpentOnMove", prevWlTime+"");
+        } catch (NumberFormatException e) {
+          // can ignore this, property won't be set
+        }
+      }
+      // END OF TIME RELATED LOGIC
+
+    } while (((node = node.getNextNode()) != null));
 
     // number all the moves
     numberTheMoves(getRootNode(), 1, 0);

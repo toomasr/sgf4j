@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import com.toomasr.sgf4j.Parser;
+import com.toomasr.sgf4j.Sgf;
 
 import junit.framework.TestCase;
 
@@ -73,5 +74,18 @@ public class TestParser extends TestCase {
 
     GameNode node = game.getFirstMove();
     assertEquals(2, node.getChildren().size());
+  }
+
+  @Test
+  public void testParsingWithTime() throws Exception {
+    Game game = Sgf.createFromPath(Paths.get("./src/test/resources/game-with-times.sgf"));
+    GameNode node = game.getRootNode();
+    do {
+      if (node.isMove() && node.getProperty("TimeSpentOnMove") == null) {
+        // if we find a move and it does not have a time associated we fail the test
+        assertEquals(true, false);
+      }
+    } while ((node = node.getNextNode()) != null);
+
   }
 }
