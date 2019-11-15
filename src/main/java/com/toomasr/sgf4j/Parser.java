@@ -170,6 +170,8 @@ public class Parser {
     generalProps.add("WS");
     // not sure what this is is but found it in a SGF file
     generalProps.add("MU");
+    // leela zero comment
+    generalProps.add("LZ");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
