@@ -1,8 +1,11 @@
 package com.toomasr.sgf4j.parser;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.toomasr.sgf4j.Sgf;
 
 /**
- * This class denotes a Go game. It deals with loading the game and saving the game
- * back to disk.
+ * This class denotes a Go game. It deals with loading the game and saving the
+ * game back to disk.
  */
 public class Game {
   private static final Logger log = LoggerFactory.getLogger(Game.class);
@@ -26,6 +29,12 @@ public class Game {
   // great for debugging
   private String originalSgf = null;
 
+  private MoveTimingInfo wTimings = new MoveTimingInfo(0, 0, 0, 0);
+
+  private MoveTimingInfo bTimings = new MoveTimingInfo(0, 0, 0, 0);
+
+  private boolean timingInfoFound = false;
+
   public Game() {
   }
 
@@ -35,15 +44,14 @@ public class Game {
 
   public void addProperty(String key, String value) {
     /*
-     * Actually properties can be set multiple times and it seems based on
-     * other software that the expectation is that everything is appended rather
-     * than the last definition wins.
+     * Actually properties can be set multiple times and it seems based on other
+     * software that the expectation is that everything is appended rather than the
+     * last definition wins.
      */
     if (properties.get(key) != null) {
       String current = properties.get(key);
       properties.put(key, current + "," + value);
-    }
-    else {
+    } else {
       properties.put(key, value);
     }
   }
@@ -55,8 +63,7 @@ public class Game {
   public String getProperty(String key, String defaultValue) {
     if (properties.get(key) == null) {
       return defaultValue;
-    }
-    else {
+    } else {
       return properties.get(key);
     }
   }
@@ -85,6 +92,91 @@ public class Game {
     this.noMoves = noMoves;
   }
 
+  public void calculateTimingMetrics() {
+    GameNode node = getRootNode();
+    // count the moves & nodes
+    // also calculate the times if possible
+    double prevBL = -1;
+    int prevBlTime = 0;
+    double prevWL = -1;
+    int prevWlTime = 0;
+
+    List<Integer> blackTimings = new ArrayList<>();
+    List<Integer> whiteTimings = new ArrayList<>();
+
+    node = getRootNode();
+    do {
+      // TIME RELATED LOGIC
+      String bl = node.getProperty("BL");
+      String wl = node.getProperty("WL");
+      if (bl != null) {
+        try {
+          double curDouble = Double.parseDouble(bl);
+          if (prevBL != -1) {
+            prevBlTime = (int) Math.round(prevBL - curDouble);
+          }
+          if (prevBlTime < 0) {
+            prevBlTime = (int) Math.round(prevBL);
+          }
+          prevBL = curDouble;
+          node.addProperty("TimeSpentOnMove", prevBlTime + "");
+          blackTimings.add(prevBlTime);
+        } catch (NumberFormatException e) {
+          // can ignore this, property won't be set
+        }
+      }
+
+      if (wl != null) {
+        try {
+          double curDouble = Double.parseDouble(wl);
+          if (prevWL != -1) {
+            prevWlTime = (int) Math.round(prevWL - curDouble);
+          }
+          if (prevWlTime < 0) {
+            prevWlTime = (int) Math.round(prevWL);
+          }
+          prevWL = curDouble;
+          node.addProperty("TimeSpentOnMove", prevWlTime + "");
+          whiteTimings.add(prevWlTime);
+        } catch (NumberFormatException e) {
+          // can ignore this, property won't be set
+        }
+      }
+      // END OF TIME RELATED LOGIC
+    } while (((node = node.getNextNode()) != null));
+
+    if (whiteTimings.size() > 0 || blackTimings.size() > 0) {
+      this.wTimings = calculateTimings(whiteTimings);
+      this.bTimings = calculateTimings(blackTimings);
+    }
+  }
+
+  private MoveTimingInfo calculateTimings(List<Integer> timings) {
+
+    int max = 0;
+    int min = Integer.MAX_VALUE;
+    long sum = 0;
+    for (Iterator<Integer> ite = timings.iterator(); ite.hasNext();) {
+      int timing = ite.next();
+      if (timing > max) {
+        max = timing;
+      }
+      if (timing < min) {
+        min = timing;
+      }
+      sum += timing;
+    }
+
+    Collections.sort(timings);
+    int median = timings.get(timings.size() / 2);
+    if (timings.size() % 2 == 0) {
+      median = (timings.size() / 2 + (timings.size() / 2 - 1)) / 2;
+    }
+
+    MoveTimingInfo rtrn = new MoveTimingInfo(min, max, (int) sum / timings.size(), median);
+    return rtrn;
+  }
+
   public void postProcess() {
     // make sure we have a empty first node
     if (getRootNode().isMove()) {
@@ -101,57 +193,15 @@ public class Game {
     // when saving the game.
     // heuristicalBranchReorder(node);
 
-    // count the moves & nodes
-    // also calculate the times if possible
-    double prevBL = -1;
-    long prevBlTime = 0;
-    double prevWL = -1;
-    long prevWlTime = 0;
-
     node = getRootNode();
     do {
       if (node.isMove()) {
         noMoves++;
       }
       noNodes++;
-
-      // TIME RELATED LOGIC
-      String bl = node.getProperty("BL");
-      String wl = node.getProperty("WL");
-      if (bl != null) {
-        try {
-          double curDouble = Double.parseDouble(bl);
-          if (prevBL != -1) {
-            prevBlTime = Math.round(prevBL - curDouble);
-          }
-          if (prevBlTime < 0) {
-            prevBlTime = Math.round(prevBL);
-          }
-          prevBL = curDouble;
-          node.addProperty("TimeSpentOnMove", prevBlTime+"");
-        } catch (NumberFormatException e) {
-          // can ignore this, property won't be set
-        }
+      if (node.getProperty("BL") != null || node.getProperty("WL") != null) {
+        timingInfoFound = true;
       }
-
-      if (wl != null) {
-        try {
-          double curDouble = Double.parseDouble(wl);
-          String msg = "";
-          if (prevWL != -1) {
-            prevWlTime = Math.round(prevWL - curDouble);
-          }
-          if (prevWlTime < 0) {
-            prevWlTime = Math.round(prevWL);
-          }
-          prevWL = curDouble;
-          node.addProperty("TimeSpentOnMove", prevWlTime+"");
-        } catch (NumberFormatException e) {
-          // can ignore this, property won't be set
-        }
-      }
-      // END OF TIME RELATED LOGIC
-
     } while (((node = node.getNextNode()) != null));
 
     // number all the moves
@@ -160,42 +210,45 @@ public class Game {
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
     helper.calculateVisualDepth(getLastMove(), 1);
+    
+    if (timingInfoFound) {
+      calculateTimingMetrics();
+    }
   }
 
   /*
-   * This is a funny logic that I added because my teacher would
-   * send me SGF files where very often a variation that should have
-   * been the mainline actually ended up being a branch.
+   * This is a funny logic that I added because my teacher would send me SGF files
+   * where very often a variation that should have been the mainline actually
+   * ended up being a branch.
    *
-   * So I'm looking for the string "answer" in the comment of the child
-   * nodes and if I find it I swap this with the main line.
+   * So I'm looking for the string "answer" in the comment of the child nodes and
+   * if I find it I swap this with the main line.
    */
   private void heuristicalBranchReorder(GameNode node) {
-  	do {
-  		GameNode tmpNode = node.getNextNode();
-  		Set<GameNode> children = node.getChildren();
+    do {
+      GameNode tmpNode = node.getNextNode();
+      Set<GameNode> children = node.getChildren();
 
-  		if (node.isMove() && tmpNode != null) {
-  			GameNode newMainLine = null;
-      	for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
-					GameNode gameNode = ite.next();
-					if (gameNode.getSgfComment().toLowerCase().contains("answer")) {
-						newMainLine = gameNode;
-					}
-				}
-      	if (newMainLine != null) {
-      		children.remove(newMainLine);
-      		children.add(node.getNextNode());
-      		node.getNextNode().setPrevNode(null);
-      		node.setNextNode(newMainLine);
-      		newMainLine.setPrevNode(node);
-      	}
+      if (node.isMove() && tmpNode != null) {
+        GameNode newMainLine = null;
+        for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
+          GameNode gameNode = ite.next();
+          if (gameNode.getSgfComment().toLowerCase().contains("answer")) {
+            newMainLine = gameNode;
+          }
+        }
+        if (newMainLine != null) {
+          children.remove(newMainLine);
+          children.add(node.getNextNode());
+          node.getNextNode().setPrevNode(null);
+          node.setNextNode(newMainLine);
+          newMainLine.setPrevNode(node);
+        }
       }
-    }
-    while (((node = node.getNextNode()) != null));
-	}
+    } while (((node = node.getNextNode()) != null));
+  }
 
-	private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
+  private void numberTheMoves(GameNode startNode, int moveNo, int nodeNo) {
     GameNode node = startNode;
     int nextMoveNo = moveNo;
     int nextNodeNo = nodeNo;
@@ -230,8 +283,7 @@ public class Game {
     do {
       if (node.isMove())
         return node;
-    }
-    while ((node = node.getNextNode()) != null);
+    } while ((node = node.getNextNode()) != null);
 
     return null;
   }
@@ -243,8 +295,7 @@ public class Game {
       if (node.isMove()) {
         rtrn = node;
       }
-    }
-    while ((node = node.getNextNode()) != null);
+    } while ((node = node.getNextNode()) != null);
     return rtrn;
   }
 
@@ -279,7 +330,8 @@ public class Game {
       if (!entry.getValue().equals(reReadProps.get(entry.getKey()))) {
         log.trace("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
         if (verbose) {
-          System.out.printf("Property mismatch %s='%s' '%s'", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
+          System.out.printf("Property mismatch %s='%s' '%s'", entry.getKey(), entry.getValue(),
+              reReadProps.get(entry.getKey()));
         }
         return false;
       }
@@ -298,10 +350,9 @@ public class Game {
     if (this.getNoMoves() != otherGame.getNoMoves()) {
       log.trace("Games have different no of moves {} {}", this.getNoMoves(), otherGame.getNoMoves());
       if (verbose)
-        System.out.println("Games have different number of moves " + this.getNoMoves()+" "+otherGame.getNoMoves());
+        System.out.println("Games have different number of moves " + this.getNoMoves() + " " + otherGame.getNoMoves());
       return false;
-    }
-    else if (verbose) {
+    } else if (verbose) {
       System.out.println("Games have same number of moves " + this.getNoMoves());
     }
 
@@ -318,7 +369,7 @@ public class Game {
   private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode, boolean verbose) {
     if (!node.isSameNode(otherNode)) {
       if (verbose) {
-        System.out.println("Nodes don't equal a="+node+"\nb="+otherGame);
+        System.out.println("Nodes don't equal a=" + node + "\nb=" + otherGame);
       }
       return false;
     }
@@ -341,10 +392,9 @@ public class Game {
       if (!doAllNodesEqual(game, nextNode, otherGame, nextOtherNode, verbose)) {
         return false;
       }
-    }
-    else if (nextNode == null && nextOtherNode != null) {
+    } else if (nextNode == null && nextOtherNode != null) {
       if (verbose) {
-        System.out.println("Nodes don't equal node="+nextNode+" otherNode="+nextOtherNode);
+        System.out.println("Nodes don't equal node=" + nextNode + " otherNode=" + nextOtherNode);
       }
       return false;
     }
@@ -355,7 +405,7 @@ public class Game {
 
     if (children.size() != otherChildren.size()) {
       if (verbose) {
-        System.out.println("Size of children don't equal node="+children+" otherNode="+otherChildren);
+        System.out.println("Size of children don't equal node=" + children + " otherNode=" + otherChildren);
       }
       return false;
     }
@@ -370,7 +420,7 @@ public class Game {
       }
       if (!found) {
         if (verbose) {
-          System.out.println("Children don't equal node="+children+" otherNode="+otherChildren);
+          System.out.println("Children don't equal node=" + children + " otherNode=" + otherChildren);
         }
         return false;
       }
@@ -443,8 +493,20 @@ public class Game {
       }
     }
     // we can just continue with the next elem
-    else if (node.getNextNode() != null){
+    else if (node.getNextNode() != null) {
       populateSgf(node.getNextNode(), sgfString);
     }
+  }
+
+  public boolean getTimingInfoFound() {
+    return this.timingInfoFound;
+  }
+
+  public MoveTimingInfo getWTimings() {
+    return wTimings;
+  }
+
+  public MoveTimingInfo getBTimings() {
+    return bTimings;
   }
 }
