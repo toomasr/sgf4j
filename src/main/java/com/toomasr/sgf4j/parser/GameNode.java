@@ -13,6 +13,8 @@ import com.toomasr.sgf4j.board.StoneState;
  * move, markers, placement of stones etc. More information at https://www.red-bean.com/sgf/sgf4.html
  */
 public class GameNode implements Comparable<GameNode>, Cloneable {
+  private static int nextId = 0;
+  
   private final Set<GameNode> children = new TreeSet<>();
   private final Map<String, String> properties = new HashMap<>();
   private final Map<String, String> updatedProperties = new HashMap<>();
@@ -24,7 +26,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private GameNode parentNode;
   private GameNode nextNode = null;
   private GameNode prevNode = null;
-  private int id;
+  private final int id;
 
   /**
    * Constructs a new node with the argument as the parent node. Besides a
@@ -45,6 +47,11 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
    */
   public GameNode(GameNode parentNode) {
     this.parentNode = parentNode;
+    this.id = getNextAvailableId();
+  }
+  
+  public static int getNextAvailableId() {
+    return ++nextId ;
   }
 
   public void addChild(GameNode node) {
@@ -302,10 +309,6 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   public String getSgfComment() {
     return properties.getOrDefault("C", "");
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public int getId() {

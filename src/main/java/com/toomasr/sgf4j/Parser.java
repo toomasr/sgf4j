@@ -328,7 +328,6 @@ public class Parser {
 
   private GameNode parseToken(String token, final GameNode parentNode, Game game, int id) {
     GameNode rtrnNode = new GameNode(parentNode);
-    rtrnNode.setId(id);
     // replace delimiters
     token = Parser.prepareToken("'" + token + "'");
 
