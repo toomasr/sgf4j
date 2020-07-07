@@ -172,6 +172,9 @@ public class Parser {
     generalProps.add("MU");
     // leela zero comment
     generalProps.add("LZ");
+    // don't quite get it what it means
+    // but lets parse this out
+    generalProps.add("WV");
   }
 
   private static final Set<String> nodeProps = new HashSet<>();
@@ -220,8 +223,10 @@ public class Parser {
     // don't quite get it what it means
     // but lets parse this out
     nodeProps.add("WV");
+    
     // dimmed stones - see http://www.red-bean.com/sgf/DD_VW.html
     nodeProps.add("VW");
+    
     // Tesuji - don't know what to do with it though
     nodeProps.add("TE");
   }
