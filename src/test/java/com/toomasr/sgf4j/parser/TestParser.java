@@ -7,9 +7,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Parser;
-import com.toomasr.sgf4j.Sgf;
-
 import junit.framework.TestCase;
 
 public class TestParser extends TestCase {

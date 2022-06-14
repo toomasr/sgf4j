@@ -4,6 +4,10 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.toomasr.sgf4j.parser.board.Group;
+import com.toomasr.sgf4j.parser.board.StoneState;
+import com.toomasr.sgf4j.parser.board.VirtualBoard;
+
 import junit.framework.TestCase;
 
 public class TestBoard extends TestCase {

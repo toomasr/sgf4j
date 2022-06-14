@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j;
+package com.toomasr.sgf4j.parser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,9 +8,6 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.toomasr.sgf4j.parser.Game;
-import com.toomasr.sgf4j.parser.GameNode;
 
 public class Parser {
   private static final Logger log = LoggerFactory.getLogger(Parser.class);

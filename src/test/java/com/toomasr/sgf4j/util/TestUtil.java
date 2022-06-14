@@ -5,8 +5,8 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Sgf;
 import com.toomasr.sgf4j.parser.Game;
+import com.toomasr.sgf4j.parser.Sgf;
 import com.toomasr.sgf4j.parser.Util;
 
 import junit.framework.TestCase;

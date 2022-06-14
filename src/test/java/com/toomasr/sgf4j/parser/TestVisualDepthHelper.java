@@ -10,8 +10,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Parser;
-
 import junit.framework.TestCase;
 
 public class TestVisualDepthHelper extends TestCase {

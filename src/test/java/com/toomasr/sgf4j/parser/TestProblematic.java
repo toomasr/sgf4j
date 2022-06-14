@@ -6,8 +6,6 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Parser;
-
 import junit.framework.TestCase;
 
 public class TestProblematic extends TestCase {
@@ -73,4 +71,12 @@ public class TestProblematic extends TestCase {
     game.postProcess();
   }
 
+  @Test
+  public void testParseProblematic014() throws Exception {
+    Path path = Paths.get("./src/test/resources/problematic-014.sgf");
+    String gameAsString = new String(Files.readAllBytes(path));
+    Parser parser = new Parser(gameAsString);
+    Game game = parser.parse();
+    game.postProcess();
+  }
 }

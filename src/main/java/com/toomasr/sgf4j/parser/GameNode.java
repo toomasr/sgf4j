@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.toomasr.sgf4j.board.StoneState;
+import com.toomasr.sgf4j.parser.board.StoneState;
 
 /**
  * GameNode is any node of a game. This can be any SGF node, whether it is an actual

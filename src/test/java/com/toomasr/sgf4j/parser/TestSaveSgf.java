@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Sgf;
-
 public class TestSaveSgf {
   @Test
   public void testSimple() throws Exception {

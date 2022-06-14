@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.board;
+package com.toomasr.sgf4j.parser.board;
 
 import com.toomasr.sgf4j.parser.GameNode;
 

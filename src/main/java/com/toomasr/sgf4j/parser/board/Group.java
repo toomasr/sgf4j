@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.board;
+package com.toomasr.sgf4j.parser.board;
 
 import java.util.HashSet;
 import java.util.Iterator;

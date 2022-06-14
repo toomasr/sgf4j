@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.board;
+package com.toomasr.sgf4j.parser.board;
 
 public enum StoneState {
   EMPTY(1), BLACK(2), WHITE(3);

@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.util;
+package com.toomasr.sgf4j.parser.util;
 
 import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
@@ -8,8 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import com.toomasr.sgf4j.Sgf;
 import com.toomasr.sgf4j.parser.Game;
+import com.toomasr.sgf4j.parser.Sgf;
 
 public class SgfCompare {
   public static void main(String[] args) throws Exception {

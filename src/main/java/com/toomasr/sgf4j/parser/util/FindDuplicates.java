@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.util;
+package com.toomasr.sgf4j.parser.util;
 
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;

@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j;
+package com.toomasr.sgf4j.parser;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,7 +12,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import com.toomasr.sgf4j.parser.Game;
 
 public class Sgf {
   private Parser parser;

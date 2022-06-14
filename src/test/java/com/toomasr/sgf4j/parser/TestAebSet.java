@@ -11,9 +11,6 @@ import org.junit.Test;
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.toomasr.sgf4j.Sgf;
-import com.toomasr.sgf4j.SgfParseException;
-
 public class TestAebSet {
   @Test
   public void testAllGamesFromArchive() {

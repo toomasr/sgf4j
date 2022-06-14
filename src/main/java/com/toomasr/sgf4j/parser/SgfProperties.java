@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j;
+package com.toomasr.sgf4j.parser;
 
 public class SgfProperties {
   public static final String WHITE_PLAYER_NAME = "PW";

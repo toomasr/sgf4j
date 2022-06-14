@@ -5,8 +5,6 @@ import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.toomasr.sgf4j.Sgf;
-
 
 public class TestShow3Moves {
   @Test

@@ -1,4 +1,4 @@
-package com.toomasr.sgf4j.board;
+package com.toomasr.sgf4j.parser.board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,9 +92,8 @@ public class VirtualBoard {
   }
 
   /**
-   * Place a stone on the board. No dead group
-   * handling or nothing. This is good to put
-   * stones on the board for any starting position.
+   * Place a stone on the board. No dead group handling or nothing. This is good
+   * to put stones on the board for any starting position.
    *
    * @param gameNode the node to place
    */
@@ -142,7 +141,7 @@ public class VirtualBoard {
     }
   }
 
-  protected Set<Group> findDistinctGroups(StoneState color) {
+  public Set<Group> findDistinctGroups(StoneState color) {
     Set<Square> alreadyChecked = new HashSet<>();
 
     Set<Group> groups = new HashSet<>();
@@ -178,8 +177,7 @@ public class VirtualBoard {
         populateGroup(i, j - 1, color, activeGroup);
       if (j + 1 < 19)
         populateGroup(i, j + 1, color, activeGroup);
-    }
-    else {
+    } else {
       return;
     }
   }
@@ -226,11 +224,10 @@ public class VirtualBoard {
     List<GameNode> movesToPlay = new ArrayList<>();
     GameNode node = fwdTo;
     do {
-      //if (node.isMove()) {
-        movesToPlay.add(node);
-      //}
-    }
-    while ((node = node.getParentNode()) != null);
+      // if (node.isMove()) {
+      movesToPlay.add(node);
+      // }
+    } while ((node = node.getParentNode()) != null);
 
     initEmptyBoard();
 
