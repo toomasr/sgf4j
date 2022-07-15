@@ -150,7 +150,10 @@ public class Game {
   }
 
   private MoveTimingInfo calculateTimings(List<Integer> timings) {
-
+    if (timings.size() == 0) {
+      return new MoveTimingInfo(0, 0, 0, 0);
+    }
+    
     int max = 0;
     int min = Integer.MAX_VALUE;
     long sum = 0;
@@ -166,7 +169,15 @@ public class Game {
     }
 
     Collections.sort(timings);
-    int median = timings.get(timings.size() / 2);
+    int median = 0;
+    
+    if (timings.size() == 1) {
+      median = timings.get(0);  
+    }
+    else if (timings.size() > 1) {
+      median = timings.get(timings.size() / 2);  
+    }
+    
     if (timings.size() % 2 == 0) {
       median = (timings.size() / 2 + (timings.size() / 2 - 1)) / 2;
     }
