@@ -12,6 +12,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.toomasr.sgf4j.parser.board.Square;
+import com.toomasr.sgf4j.parser.board.StoneState;
+import com.toomasr.sgf4j.parser.board.VirtualBoard;
+
 /**
  * This class denotes a Go game. It deals with loading the game and saving the
  * game back to disk.
@@ -476,12 +480,73 @@ public class Game {
     rtrn.append(")");
     return rtrn.toString();
   }
+  
+  public String getPositionSgf(GameNode node, VirtualBoard vBoard) {
+    StringBuilder rtrn = new StringBuilder();
+    rtrn.append("(");
+
+    // lets write all the root node properties
+    Map<String, String> props = getProperties();
+    if (props.size() > 0) {
+      rtrn.append(";");
+    }
+
+    for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
+      Map.Entry<String, String> entry = ite.next();
+      // we skip adding black or white stones because we will overwrite
+      // these two anyways
+      if ("AB".equals(entry.getKey()) || "AW".equals(entry.getKey())) {
+        continue;
+      }
+      // we won't honour the original value of who's move it is
+      // we'll overwrite this with a new one
+      if ("PL".equals(entry.getKey())) {
+        continue;
+      }
+      rtrn.append(entry.getKey() + "[" + entry.getValue().trim() + "]");
+    }
+       
+    StringBuffer AB = new StringBuffer();
+    StringBuffer AW = new StringBuffer();
+    Square[][] board = vBoard.getBoard();
+    for (int i = 0; i < board.length; i++) {
+      for (int j = 0; j < board[i].length; j++) {
+        if (board[i][j].isOfColor(StoneState.BLACK)) {
+         AB.append("["+Util.coodToAlpha(i, j)+"]"); 
+        }
+        else if (board[i][j].isOfColor(StoneState.WHITE)) {
+          AW.append("["+Util.coodToAlpha(i, j)+"]"); 
+         }
+      }
+    }
+    
+    if (AB.length() > 1 ) {
+      rtrn.append("AB"+AB.toString());
+    }
+    
+    if (AW.length() > 1 ) {
+      rtrn.append("AW"+AW.toString());
+    }
+    
+    if (node != null && node.isBlack()) {
+      rtrn.append("PL[W]\n");
+    }
+
+    if (node.getNextNode() != null) {
+      populateSgf(node.getNextNode(), rtrn);
+    }
+
+    rtrn.append(")");
+    return rtrn.toString();
+  }
 
   private void populateSgf(GameNode node, StringBuilder sgfString) {
     // print out the node
     sgfString.append(";");
     for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
+      if("TimeSpentOnMove".equals(entry.getKey()))
+        continue;
       sgfString.append(entry.getKey() + "[" + entry.getValue() + "]");
     }
     sgfString.append("\n");
