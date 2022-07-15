@@ -30,10 +30,11 @@ public class VirtualBoard {
   }
 
   public void makeMove(GameNode move, GameNode prevMove) {
-    // only if the move is not a pass
+    // only if the move is a visible move
     if (move.getMoveString() != null && !move.isPass() && !move.isPlacementMove()) {
       int x = move.getCoords()[0];
       int y = move.getCoords()[1];
+      
       this.vBoard[x][y] = new Square(move.getColorAsEnum(), x, y);
       Set<Group> removedGroups = removeDeadGroupsForOppColor(move.getColorAsEnum());
       moveToRemovedGroups.put(move, removedGroups);
@@ -46,7 +47,7 @@ public class VirtualBoard {
   }
 
   public void undoMove(GameNode moveNode, GameNode prevMove) {
-    if (!moveNode.isPass() && !moveNode.isPlacementMove()) {
+    if (!moveNode.isPass() && !moveNode.isPlacementMove() && moveNode.getMoveString() != null) {
       String currMoveStr = moveNode.getMoveString();
       int[] moveCoords = Util.alphaToCoords(currMoveStr);
       removeStone(moveCoords[0], moveCoords[1]);
@@ -252,5 +253,18 @@ public class VirtualBoard {
 
   public void addBoardListener(BoardListener listener) {
     this.boardListeners.add(listener);
+  }
+  
+  public String toString() {
+    StringBuffer rtrn = new StringBuffer();
+    
+    for (int i = 0; i < vBoard.length; i++) {
+      for (int j = 0; j < vBoard.length; j++) {
+        rtrn.append(vBoard[j][i]);
+      }
+      rtrn.append("\n");
+    }
+    
+    return rtrn.toString();
   }
 }

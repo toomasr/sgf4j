@@ -285,6 +285,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     if (!isPlacementMove() && "tt".equals(getMoveString())) {
       return true;
     }
+    if (!isPlacementMove() && "".equals(getMoveString())) {
+      return true;
+    }
     return false;
   }
 

@@ -42,7 +42,7 @@ public class TestSaveSgf {
   @Test
   public void testProblematic011() throws Exception {
     Path sgfPath = Paths.get("./src/test/resources/problematic-011.sgf");
-    verifyGame(sgfPath);
+    verifyGame(sgfPath, false);
   }
 
   @Test
@@ -77,11 +77,11 @@ public class TestSaveSgf {
     }
 
     Game reReadGame = Sgf.createFromPath(file.toPath());
-    boolean result = game.isSameGame(reReadGame);
+    boolean result = game.isSameGame(reReadGame, verbose);
     if (!result || verbose) {
       File tmpFile = Sgf.writeToFile(game.getOriginalSgf());
       System.out.println("Parsing information:");
-      game.isSameGame(reReadGame, true);
+      game.isSameGame(reReadGame, verbose);
       System.out.println();
       System.out.println("ORIGINAL");
       System.out.println(game.getOriginalSgf());

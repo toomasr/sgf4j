@@ -79,6 +79,10 @@ public class Util {
     }
     return new int[] { alphaToCoord.get(input.charAt(0) + ""), alphaToCoord.get(input.charAt(1) + "") };
   }
+  
+  public static String coodToAlpha(int x, int y) {
+    return coordToAlpha.get(x)+coordToAlpha.get(y);
+  }
 
   public static Map<String, String> extractLabels(String str) {
     HashMap<String, String> rtrn = new HashMap<String, String>();
@@ -93,12 +97,12 @@ public class Util {
     return rtrn;
   }
 
-  public static String[] coordSequencesToSingle(String addBlack) {
+  public static String[] coordSequencesToSingle(String coordSequence) {
     List<String> rtrn = new ArrayList<>();
-    String[] blackStones = addBlack.split(",");
-    for (int i = 0; i < blackStones.length; i++) {
-      if (blackStones[i].contains(":")) {
-        String[] seq = blackStones[i].split(":");
+    String[] stones = coordSequence.split(",");
+    for (int i = 0; i < stones.length; i++) {
+      if (stones[i].contains(":")) {
+        String[] seq = stones[i].split(":");
         if (seq[0].charAt(0) == seq[1].charAt(0)) {
           for (int j = Util.alphaToCoord.get(seq[0].charAt(1) + ""); j <= Util.alphaToCoord.get(seq[1].charAt(1) + ""); j++) {
             rtrn.add(seq[0].charAt(0) + coordToAlpha.get(j));
@@ -106,12 +110,14 @@ public class Util {
         }
         else {
           for (int j = Util.alphaToCoord.get(seq[0].charAt(0) + ""); j <= Util.alphaToCoord.get(seq[1].charAt(0) + ""); j++) {
-            rtrn.add(coordToAlpha.get(j) + seq[0].charAt(1));
+            for (int k = Util.alphaToCoord.get(seq[0].charAt(1) + ""); k <= Util.alphaToCoord.get(seq[1].charAt(1) + ""); k++) {
+              rtrn.add(coordToAlpha.get(j) + coordToAlpha.get(k));
+            }
           }
         }
       }
       else {
-        rtrn.add(blackStones[i]);
+        rtrn.add(stones[i]);
       }
     }
     return rtrn.toArray(new String[] {});

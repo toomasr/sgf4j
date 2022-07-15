@@ -389,7 +389,9 @@ public class Parser {
       value = Parser.normaliseToken(value);
 
       // these properties require some cleanup
-      if ("AB".equals(key) || "AW".equals(key)) {
+      // they are for adding black, white stones or making them empty
+      // they can be in the format of AE[ab][dd:ff][aa,bb]
+      if ("AB".equals(key) || "AW".equals(key) || "AE".equals(key)) {
         // these come in as a list of coordinates while the first [ is cut off
         // and also the last ], easy to split by ][
         String[] list = value.split("\\]\\[");
