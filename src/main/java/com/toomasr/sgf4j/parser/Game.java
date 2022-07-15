@@ -320,7 +320,7 @@ public class Game {
     return isSameGame(otherGame, false);
   }
 
-  public boolean isSameGame(Game otherGame, boolean verbose) {
+  public boolean isSameGame(Game otherGame, final boolean verbose) {
     if (this.equals(otherGame)) {
       if (verbose) {
         System.out.println("The very same game object - returning true");
@@ -340,7 +340,7 @@ public class Game {
 
     for (Iterator<Map.Entry<String, String>> ite = properties.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
-      if (!entry.getValue().equals(reReadProps.get(entry.getKey()))) {
+      if (!entry.getValue().trim().equals( reReadProps.get(entry.getKey()).trim()) ) {
         log.trace("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
         if (verbose) {
           System.out.printf("Property mismatch %s='%s' '%s'", entry.getKey(), entry.getValue(),
@@ -379,10 +379,10 @@ public class Game {
     return true;
   }
 
-  private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode, boolean verbose) {
+  private boolean doAllNodesEqual(Game game, GameNode node, Game otherGame, GameNode otherNode, final boolean verbose) {
     if (!node.isSameNode(otherNode)) {
       if (verbose) {
-        System.out.println("Nodes don't equal a=" + node + "\nb=" + otherGame);
+        System.out.println("Nodes don't equal \na=" + node + "\nb=" + otherGame);
       }
       return false;
     }
