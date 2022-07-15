@@ -177,6 +177,8 @@ public class Parser {
   private static final Set<String> nodeProps = new HashSet<>();
 
   static {
+    // add empty = remove stones
+    nodeProps.add("AE");
     // Move for Black
     nodeProps.add("B");
     // Move for White
@@ -201,6 +203,8 @@ public class Parser {
     nodeProps.add("WL");
     // time left for black
     nodeProps.add("BL");
+    // PL tells whose turn it is to play.
+    nodeProps.add("PL");
     // Comment
     nodeProps.add("C");
     /*
@@ -226,6 +230,41 @@ public class Parser {
     
     // Tesuji - don't know what to do with it though
     nodeProps.add("TE");
+    
+    /* Something good for white. SGF viewers should display a
+    message. The property is not related to any specific place
+    on the board, but marks the whole node instead.
+    GW must not be mixed with GB, DM or UC within a node.*/
+    nodeProps.add("GW");
+    
+    /* Something good for black. SGF viewers should display a
+    message. The property is not related to any specific place
+    on the board, but marks the whole node instead.
+    GW must not be mixed with GB, DM or UC within a node.*/
+    nodeProps.add("GB");
+    
+    /* The position is even. SGF viewers should display a
+    message. This property may indicate main variations in
+    opening libraries (joseki) too. Thus DM[2] indicates an
+    even result for both players and that this is a main
+    variation of this joseki/opening.
+    This property must not be mixed with UC, GB or GW
+    within a node.*/
+    nodeProps.add("DM");
+    
+    /* The position is unclear. SGF viewers should display a
+    message. This property must not be mixed with DM, GB or GW
+    within a node. */
+    nodeProps.add("UC");
+    
+    /* The move played is bad. Viewers should display a message. */
+    nodeProps.add("BM");
+    
+    /* The move played is doubtful. Viewers should display a message. */
+    nodeProps.add("DO");
+    
+    /* The move played is interesting. Viewers should display a message. */
+    nodeProps.add("IT");
   }
 
   private Stack<GameNode> treeStack = new Stack<>();
