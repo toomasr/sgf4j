@@ -9,15 +9,15 @@ import java.util.TreeSet;
 import com.toomasr.sgf4j.parser.board.StoneState;
 
 /**
- * GameNode is any node of a game. This can be any SGF node, whether it is an actual
- * move, markers, placement of stones etc. More information at https://www.red-bean.com/sgf/sgf4.html
+ * GameNode is any node of a game. This can be any SGF node, whether it is an
+ * actual move, markers, placement of stones etc. More information at
+ * https://www.red-bean.com/sgf/sgf4.html
  */
 public class GameNode implements Comparable<GameNode>, Cloneable {
   private static int nextId = 0;
-  
+
   private final Set<GameNode> children = new TreeSet<>();
   private final Map<String, String> properties = new HashMap<>();
-  private final Map<String, String> updatedProperties = new HashMap<>();
 
   private int moveNo = -1;
   private int nodeNo = -1;
@@ -29,19 +29,19 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   private final int id;
 
   /**
-   * Constructs a new node with the argument as the parent node. Besides a
-   * parent node each node also has possibly a previous and next node. Branching
-   * is achieved by also having children nodes. See the following for a short
+   * Constructs a new node with the argument as the parent node. Besides a parent
+   * node each node also has possibly a previous and next node. Branching is
+   * achieved by also having children nodes. See the following for a short
    * overview.
    *
-   * getNextNode is the node next on the same line of play. If this is null
-   * then the line does not have any more moves.
+   * getNextNode is the node next on the same line of play. If this is null then
+   * the line does not have any more moves.
    *
    * getPrevNode is the previous node on the same line of play. If this is null
    * then this line does not have any previous moves.
    *
-   * If node hasChildren() is true then this node has child nodes and not just
-   * a nextNode. In that case the getNextNode will be part of the getChildren().
+   * If node hasChildren() is true then this node has child nodes and not just a
+   * nextNode. In that case the getNextNode will be part of the getChildren().
    *
    * @param parentNode node to be the parent of the just created node.
    */
@@ -49,9 +49,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     this.parentNode = parentNode;
     this.id = getNextAvailableId();
   }
-  
+
   public static int getNextAvailableId() {
-    return ++nextId ;
+    return ++nextId;
   }
 
   public void addChild(GameNode node) {
@@ -97,14 +97,6 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     properties.put(key, value);
   }
 
-  public String getUpdatedProperty(String key) {
-    return updatedProperties.get(key);
-  }
-
-  public void addUpdatedProperty(String key, String value) {
-    updatedProperties.put(key, value);
-  }
-
   public String getProperty(String key) {
     return properties.get(key);
   }
@@ -127,11 +119,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public String getMoveString() {
     if (properties.get("W") != null) {
       return properties.get("W");
-    }
-    else if (properties.get("B") != null) {
+    } else if (properties.get("B") != null) {
       return properties.get("B");
-    }
-    else {
+    } else {
       return null;
     }
   }
@@ -191,9 +181,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
 
   /**
    * Similar to equals but doesn't include the ID fiel which is auto-assigned
-   * during parsing and can be system and time dependent. Method is meant
-   * to compare nodes for all the properties worth while equals method
-   * is good to compare objects.
+   * during parsing and can be system and time dependent. Method is meant to
+   * compare nodes for all the properties worth while equals method is good to
+   * compare objects.
    *
    * @param otherNode
    * @return
@@ -210,8 +200,7 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     if (children == null) {
       if (other.children != null)
         return false;
-    }
-    else {
+    } else {
       for (Iterator<GameNode> ite = children.iterator(); ite.hasNext();) {
         GameNode gameNode = (GameNode) ite.next();
         boolean found = false;
@@ -232,14 +221,12 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     if (parentNode == null) {
       if (other.parentNode != null)
         return false;
-    }
-    else if (!parentNode.isSameNode(other.parentNode))
+    } else if (!parentNode.isSameNode(other.parentNode))
       return false;
     if (properties == null) {
       if (other.properties != null)
         return false;
-    }
-    else if (!properties.equals(other.properties))
+    } else if (!properties.equals(other.properties))
       return false;
     if (visualDepth != other.visualDepth)
       return false;
@@ -292,8 +279,8 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   }
 
   /**
-   * There are moves that actually don't place a stone of a
-   * move but rather a new added position. I call this a placementMove
+   * There are moves that actually don't place a stone of a move but rather a new
+   * added position. I call this a placementMove
    *
    * @return true if this is a placement move and not a game move
    */
@@ -321,8 +308,9 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
   public String toString() {
     String parentHashcode = "";
     if (getParentNode() != null)
-      parentHashcode = "parentNode: "+getParentNode().hashCode();
-    return "Props: keys=" + properties.keySet().toString() + " all=" + properties.toString() + " moveNo: " + moveNo + " children: " + children.size() + " vdepth: " + visualDepth+ parentHashcode;
+      parentHashcode = "parentNode: " + getParentNode().hashCode();
+    return "Props: keys=" + properties.keySet().toString() + " all=" + properties.toString() + " moveNo: " + moveNo
+        + " children: " + children.size() + " vdepth: " + visualDepth + parentHashcode;
   }
 
   @Override
@@ -350,22 +338,19 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     if (children == null) {
       if (other.children != null)
         return false;
-    }
-    else if (!children.equals(other.children))
+    } else if (!children.equals(other.children))
       return false;
     if (moveNo != other.moveNo)
       return false;
     if (parentNode == null) {
       if (other.parentNode != null)
         return false;
-    }
-    else if (!parentNode.equals(other.parentNode))
+    } else if (!parentNode.equals(other.parentNode))
       return false;
     if (properties == null) {
       if (other.properties != null)
         return false;
-    }
-    else if (!properties.equals(other.properties))
+    } else if (!properties.equals(other.properties))
       return false;
     if (visualDepth != other.visualDepth)
       return false;

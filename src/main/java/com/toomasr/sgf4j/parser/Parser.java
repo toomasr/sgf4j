@@ -283,6 +283,12 @@ public class Parser {
     int moveNo = 1;
     int id = 10000;
 
+    if (originalGame.trim().length() == 0) {
+      GameNode rootNode = new GameNode(null);
+      game.setRootNode(rootNode);
+      return game;
+    }
+    
     for (int i = 0; i < originalGame.length(); i++) {
       char chr = originalGame.charAt(i);
       if (';' == chr && (i == 0 || originalGame.charAt(i - 1) != '\\')) {

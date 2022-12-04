@@ -44,18 +44,25 @@ public class Game {
     this.originalSgf = originalSgf;
   }
 
+  /**
+   * Actually properties can be set multiple times and it seems based on other
+   * software that the expectation is that everything is appended rather than the
+   * last definition wins.
+   */
   public void addProperty(String key, String value) {
-    /*
-     * Actually properties can be set multiple times and it seems based on other
-     * software that the expectation is that everything is appended rather than the
-     * last definition wins.
-     */
     if (properties.get(key) != null) {
       String current = properties.get(key);
       properties.put(key, current + "," + value);
     } else {
       properties.put(key, value);
     }
+  }
+  
+  /**
+   * Sets the property by overwriting the previous value
+   */
+  public void setProperty(String key, String value) {
+    properties.put(key, value);
   }
 
   public String getProperty(String key) {
@@ -466,9 +473,8 @@ public class Game {
 
     // lets write all the root node properties
     Map<String, String> props = getProperties();
-    if (props.size() > 0) {
-      rtrn.append(";");
-    }
+ 
+    rtrn.append(";");
 
     for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
@@ -487,10 +493,9 @@ public class Game {
 
     // lets write all the root node properties
     Map<String, String> props = getProperties();
-    if (props.size() > 0) {
-      rtrn.append(";");
-    }
 
+    rtrn.append(";");
+  
     for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
       // we skip adding black or white stones because we will overwrite
