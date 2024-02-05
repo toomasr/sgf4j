@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ import com.toomasr.sgf4j.parser.board.VirtualBoard;
 public class Game {
   private static final Logger log = LoggerFactory.getLogger(Game.class);
 
-  private Map<String, String> properties = new HashMap<String, String>();
+  private Map<String, String> properties = new LinkedHashMap<String, String>();
   private GameNode rootNode;
   private int noMoves = 0;
   private int noNodes = 0;
@@ -78,7 +80,7 @@ public class Game {
   }
 
   public Map<String, String> getProperties() {
-    return new HashMap<String, String>(this.properties);
+    return this.properties;
   }
 
   public String toString() {
@@ -546,8 +548,10 @@ public class Game {
   }
 
   private void populateSgf(GameNode node, StringBuilder sgfString) {
-    // print out the node
-    sgfString.append(";");
+    // print out the node prefix but skip for root node
+    if (node.getMoveNo() != -1) {
+      sgfString.append(";");
+    }
     for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
       if("TimeSpentOnMove".equals(entry.getKey()))
