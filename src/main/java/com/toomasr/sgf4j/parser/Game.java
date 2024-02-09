@@ -2,14 +2,13 @@ package com.toomasr.sgf4j.parser;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class Game {
       properties.put(key, value);
     }
   }
-  
+
   /**
    * Sets the property by overwriting the previous value
    */
@@ -166,7 +165,7 @@ public class Game {
     if (timings.size() == 0) {
       return new MoveTimingInfo(0, 0, 0, 0);
     }
-    
+
     int max = 0;
     int min = Integer.MAX_VALUE;
     long sum = 0;
@@ -183,14 +182,13 @@ public class Game {
 
     Collections.sort(timings);
     int median = 0;
-    
+
     if (timings.size() == 1) {
-      median = timings.get(0);  
+      median = timings.get(0);
+    } else if (timings.size() > 1) {
+      median = timings.get(timings.size() / 2);
     }
-    else if (timings.size() > 1) {
-      median = timings.get(timings.size() / 2);  
-    }
-    
+
     if (timings.size() % 2 == 0) {
       median = (timings.size() / 2 + (timings.size() / 2 - 1)) / 2;
     }
@@ -232,7 +230,7 @@ public class Game {
     // calculate the visual depth
     VisualDepthHelper helper = new VisualDepthHelper();
     helper.calculateVisualDepth(getLastMove(), 1);
-    
+
     if (timingInfoFound) {
       calculateTimingMetrics();
     }
@@ -349,7 +347,7 @@ public class Game {
 
     for (Iterator<Map.Entry<String, String>> ite = properties.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
-      if (!entry.getValue().trim().equals( reReadProps.get(entry.getKey()).trim()) ) {
+      if (!entry.getValue().trim().equals(reReadProps.get(entry.getKey()).trim())) {
         log.trace("Property mismatch {}={} {}", entry.getKey(), entry.getValue(), reReadProps.get(entry.getKey()));
         if (verbose) {
           System.out.printf("Property mismatch %s='%s' '%s'", entry.getKey(), entry.getValue(),
@@ -475,7 +473,7 @@ public class Game {
 
     // lets write all the root node properties
     Map<String, String> props = getProperties();
- 
+
     rtrn.append(";");
 
     for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
@@ -498,7 +496,7 @@ public class Game {
     rtrn.append(")");
     return rtrn.toString();
   }
-  
+
   public String getPositionSgf(GameNode node, VirtualBoard vBoard) {
     StringBuilder rtrn = new StringBuilder();
     rtrn.append("(");
@@ -507,7 +505,7 @@ public class Game {
     Map<String, String> props = getProperties();
 
     rtrn.append(";");
-  
+
     for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
       // we skip adding black or white stones because we will overwrite
@@ -522,29 +520,28 @@ public class Game {
       }
       rtrn.append(entry.getKey() + "[" + entry.getValue().trim() + "]");
     }
-       
+
     StringBuffer AB = new StringBuffer();
     StringBuffer AW = new StringBuffer();
     Square[][] board = vBoard.getBoard();
     for (int i = 0; i < board.length; i++) {
       for (int j = 0; j < board[i].length; j++) {
         if (board[i][j].isOfColor(StoneState.BLACK)) {
-         AB.append("["+Util.coodToAlpha(i, j)+"]"); 
+          AB.append("[" + Util.coodToAlpha(i, j) + "]");
+        } else if (board[i][j].isOfColor(StoneState.WHITE)) {
+          AW.append("[" + Util.coodToAlpha(i, j) + "]");
         }
-        else if (board[i][j].isOfColor(StoneState.WHITE)) {
-          AW.append("["+Util.coodToAlpha(i, j)+"]"); 
-         }
       }
     }
-    
-    if (AB.length() > 1 ) {
-      rtrn.append("AB"+AB.toString());
+
+    if (AB.length() > 1) {
+      rtrn.append("AB" + AB.toString());
     }
-    
-    if (AW.length() > 1 ) {
-      rtrn.append("AW"+AW.toString());
+
+    if (AW.length() > 1) {
+      rtrn.append("AW" + AW.toString());
     }
-    
+
     if (node != null && node.isBlack()) {
       rtrn.append("PL[W]\n");
     }
@@ -564,7 +561,7 @@ public class Game {
     }
     for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
-      if("TimeSpentOnMove".equals(entry.getKey()))
+      if ("TimeSpentOnMove".equals(entry.getKey()))
         continue;
       sgfString.append(entry.getKey() + "[" + entry.getValue() + "]");
     }
