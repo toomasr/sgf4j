@@ -480,7 +480,17 @@ public class Game {
 
     for (Iterator<Map.Entry<String, String>> ite = props.entrySet().iterator(); ite.hasNext();) {
       Map.Entry<String, String> entry = ite.next();
-      rtrn.append(entry.getKey() + "[" + entry.getValue() + "]");
+
+      String[] toSplit = new String[] { "ab", "aw" };
+      
+      if (Arrays.asList(toSplit).contains(entry.getKey().toLowerCase()) && entry.getValue().indexOf(",") != -1) {
+        String entries[] = entry.getValue().split(",");
+        for (int i = 0; i < entries.length; i++) {
+          rtrn.append(entry.getKey() + "[" + entries[i] + "]");
+        }
+      } else {
+        rtrn.append(entry.getKey() + "[" + entry.getValue() + "]");
+      }
     }
 
     populateSgf(getRootNode(), rtrn);
