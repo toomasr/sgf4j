@@ -54,6 +54,13 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     return ++nextId;
   }
 
+  /**
+   * Adds a child node to this node. The first child becomes the nextNode (main line),
+   * subsequent children are stored as variations.
+   *
+   * @param node the child node to add
+   * @throws RuntimeException if the node already exists as a child
+   */
   public void addChild(GameNode node) {
     if (nextNode == null) {
       nextNode = node;
@@ -69,38 +76,89 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     children.add(node);
   }
 
+  /**
+   * Sets the next node in the current line of play.
+   *
+   * @param nextNode the next node
+   */
   public void setNextNode(GameNode nextNode) {
     this.nextNode = nextNode;
   }
 
+  /**
+   * Returns the next node in the current line of play.
+   *
+   * @return the next node, or null if this is the last node in the line
+   */
   public GameNode getNextNode() {
     return nextNode;
   }
 
+  /**
+   * Sets the previous node in the current line of play.
+   *
+   * @param node the previous node
+   */
   public void setPrevNode(GameNode node) {
     this.prevNode = node;
   }
 
+  /**
+   * Returns the previous node in the current line of play.
+   *
+   * @return the previous node, or null if this is the first node in the line
+   */
   public GameNode getPrevNode() {
     return prevNode;
   }
 
+  /**
+   * Returns the parent node in the game tree. For nodes in the main line,
+   * this is typically the same as prevNode. For variation nodes, this is
+   * the node where the variation branches off.
+   *
+   * @return the parent node, or null for the root node
+   */
   public GameNode getParentNode() {
     return parentNode;
   }
 
+  /**
+   * Sets the parent node in the game tree.
+   *
+   * @param node the parent node
+   */
   public void setParentNode(GameNode node) {
     parentNode = node;
   }
 
+  /**
+   * Adds or updates a property on this node.
+   *
+   * @param key the SGF property key (e.g., "B", "W", "C" for comment)
+   * @param value the property value
+   */
   public void addProperty(String key, String value) {
     properties.put(key, value);
   }
 
+  /**
+   * Gets a property value from this node.
+   *
+   * @param key the SGF property key
+   * @return the property value, or null if not set
+   */
   public String getProperty(String key) {
     return properties.get(key);
   }
 
+  /**
+   * Gets a property value with a default fallback.
+   *
+   * @param key the SGF property key
+   * @param defaultValue the value to return if property is not set
+   * @return the property value, or defaultValue if not set
+   */
   public String getProperty(String key, String defaultValue) {
     if (properties.get(key) == null)
       return defaultValue;
@@ -108,14 +166,29 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
       return properties.get(key);
   }
 
+  /**
+   * Returns all properties on this node.
+   *
+   * @return the properties map
+   */
   public Map<String, String> getProperties() {
     return properties;
   }
 
+  /**
+   * Returns whether this node represents a move (has B or W property).
+   *
+   * @return true if this node is a move
+   */
   public boolean isMove() {
     return properties.get("W") != null || properties.get("B") != null;
   }
 
+  /**
+   * Returns the move coordinates as an SGF string (e.g., "pd", "dp").
+   *
+   * @return the move string, or null if not a move
+   */
   public String getMoveString() {
     if (properties.get("W") != null) {
       return properties.get("W");
@@ -126,48 +199,98 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     }
   }
 
+  /**
+   * Returns the move coordinates as an int array [x, y].
+   *
+   * @return coordinates array where x and y are 0-indexed board positions
+   */
   public int[] getCoords() {
     String moveStr = getMoveString();
     int[] moveCoords = Util.alphaToCoords(moveStr);
     return moveCoords;
   }
 
+  /**
+   * Returns whether this is a White move.
+   *
+   * @return true if this node has a W (White move) property
+   */
   public boolean isWhite() {
     return properties.get("W") != null;
   }
 
+  /**
+   * Returns whether this is a Black move.
+   *
+   * @return true if this node has a B (Black move) property
+   */
   public boolean isBlack() {
     return properties.get("B") != null;
   }
 
+  /**
+   * Returns the color of this move as a string.
+   *
+   * @return "W" for White, "B" for Black (defaults to "B" if not a move)
+   */
   public String getColor() {
     if (properties.get("W") != null)
       return "W";
     return "B";
   }
 
+  /**
+   * Returns the color of this move as a StoneState enum.
+   *
+   * @return StoneState.WHITE or StoneState.BLACK (defaults to BLACK if not a move)
+   */
   public StoneState getColorAsEnum() {
     if (properties.get("W") != null)
       return StoneState.WHITE;
     return StoneState.BLACK;
   }
 
+  /**
+   * Returns whether this node has variation branches.
+   *
+   * @return true if there are child variations
+   */
   public boolean hasChildren() {
     return children.size() > 0;
   }
 
+  /**
+   * Returns the child variation nodes (not including the main line nextNode).
+   *
+   * @return set of child variation nodes
+   */
   public Set<GameNode> getChildren() {
     return children;
   }
 
+  /**
+   * Sets the move number for this node.
+   *
+   * @param i the move number
+   */
   public void setMoveNo(int i) {
     this.moveNo = i;
   }
 
+  /**
+   * Returns the move number. Only meaningful if this node {@link #isMove()}.
+   *
+   * @return the move number, or -1 if not set
+   */
   public int getMoveNo() {
     return moveNo;
   }
 
+  /**
+   * Returns whether this node has no properties and no children.
+   *
+   * @return true if the node is empty
+   */
   public boolean isEmpty() {
     if (properties.isEmpty() && children.size() == 0)
       return true;
@@ -257,14 +380,29 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
     return 0;
   }
 
+  /**
+   * Sets the visual depth for UI layout purposes.
+   *
+   * @param visualDepth the visual depth value
+   */
   public void setVisualDepth(int visualDepth) {
     this.visualDepth = visualDepth;
   }
 
+  /**
+   * Returns the visual depth for UI layout of variations.
+   *
+   * @return the visual depth, or -1 if not set
+   */
   public int getVisualDepth() {
     return visualDepth;
   }
 
+  /**
+   * Returns whether this move is a pass (empty move or "tt").
+   *
+   * @return true if this is a pass move
+   */
   public boolean isPass() {
     // tt means a pass and actually an empty [] also
     // but right now not handling that because I don't know
@@ -289,18 +427,38 @@ public class GameNode implements Comparable<GameNode>, Cloneable {
         && (properties.get("AB") != null || properties.get("AW") != null);
   }
 
+  /**
+   * Sets the node number in the sequence.
+   *
+   * @param nodeNo the node number
+   */
   public void setNodeNo(int nodeNo) {
     this.nodeNo = nodeNo;
   }
 
+  /**
+   * Returns the node number in the sequence (includes non-move nodes).
+   *
+   * @return the node number, or -1 if not set
+   */
   public int getNodeNo() {
     return this.nodeNo;
   }
 
+  /**
+   * Returns the SGF comment (C property) for this node.
+   *
+   * @return the comment text, or empty string if no comment
+   */
   public String getSgfComment() {
     return properties.getOrDefault("C", "");
   }
 
+  /**
+   * Returns the unique ID assigned to this node during parsing.
+   *
+   * @return the node ID
+   */
   public int getId() {
     return this.id;
   }

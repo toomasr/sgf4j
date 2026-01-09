@@ -13,6 +13,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Main entry point for parsing and writing SGF (Smart Game Format) files.
+ * Provides static factory methods to create {@link Game} objects from various sources
+ * and methods to write games back to SGF format.
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * // Parse from file
+ * Game game = Sgf.createFromPath(Paths.get("game.sgf"));
+ *
+ * // Parse from string
+ * Game game = Sgf.createFromString("(;GM[1]FF[4];B[pd];W[dp])");
+ *
+ * // Write to file
+ * Sgf.writeToFile(game, Paths.get("output.sgf"));
+ * </pre>
+ *
+ * @see Game
+ * @see GameNode
+ */
 public class Sgf {
   private Parser parser;
   private Game game;
@@ -24,6 +44,14 @@ public class Sgf {
     game.postProcess();
   }
 
+  /**
+   * Creates a Game from an SGF file using the specified character encoding.
+   *
+   * @param path the path to the SGF file
+   * @param charSet the character encoding to use (e.g., "UTF-8", "ISO-8859-1")
+   * @return a parsed Game object
+   * @throws RuntimeException if the file cannot be read
+   */
   public static Game createFromPath(Path path, String charSet) {
     try {
       String gameAsString = new String(Files.readAllBytes(path), charSet);
@@ -34,6 +62,13 @@ public class Sgf {
     }
   }
 
+  /**
+   * Creates a Game from an SGF file using UTF-8 encoding.
+   *
+   * @param path the path to the SGF file
+   * @return a parsed Game object
+   * @throws RuntimeException if the file cannot be read
+   */
   public static Game createFromPath(Path path) {
     try {
       String gameAsString = new String(Files.readAllBytes(path), "UTF-8");
@@ -44,11 +79,24 @@ public class Sgf {
     }
   }
 
+  /**
+   * Creates a Game by parsing an SGF string.
+   *
+   * @param gameAsString the SGF content as a string
+   * @return a parsed Game object
+   */
   public static Game createFromString(String gameAsString) {
     Sgf rtrn = new Sgf(gameAsString);
     return rtrn.getGame();
   }
 
+  /**
+   * Creates a Game by parsing SGF content from an InputStream using UTF-8 encoding.
+   *
+   * @param in the input stream containing SGF content
+   * @return a parsed Game object
+   * @throws RuntimeException if the stream cannot be read
+   */
   public static Game createFromInputStream(InputStream in) {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8").newDecoder()))) {
       StringBuilder out = new StringBuilder();
@@ -65,10 +113,26 @@ public class Sgf {
 
   }
 
+  /**
+   * Writes a Game to an SGF file using UTF-8 encoding.
+   *
+   * @param game the game to write
+   * @param destination the path where the SGF file will be written
+   * @throws RuntimeException if the file cannot be written
+   */
   public static void writeToFile(Game game, Path destination) {
     writeToFile(game, destination, "UTF-8");
   }
 
+  /**
+   * Writes a Game to an SGF file with the specified encoding, optionally keeping a backup.
+   *
+   * @param game the game to write
+   * @param destination the path where the SGF file will be written
+   * @param encoding the character encoding to use
+   * @param keepOriginal if true, creates a backup of the original file with a timestamp suffix
+   * @throws RuntimeException if the file cannot be written
+   */
   public static void writeToFile(Game game, Path destination, String encoding, boolean keepOriginal) {
     if (keepOriginal) {
       Path copyOfOriginal = Paths.get(destination.toString() + ".orig." + System.currentTimeMillis());
@@ -82,6 +146,14 @@ public class Sgf {
     writeToFile(game, destination, encoding);
   }
 
+  /**
+   * Writes a Game to an SGF file with the specified encoding.
+   *
+   * @param game the game to write
+   * @param destination the path where the SGF file will be written
+   * @param encoding the character encoding to use
+   * @throws RuntimeException if the file cannot be written
+   */
   public static void writeToFile(Game game, Path destination, String encoding) {
     try (
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(destination.toFile()), Charset.forName(encoding).newEncoder())) {
@@ -92,6 +164,13 @@ public class Sgf {
     }
   }
 
+  /**
+   * Writes an SGF string to a temporary file. Useful for testing.
+   *
+   * @param sgf the SGF content as a string
+   * @return a temporary File containing the SGF content
+   * @throws RuntimeException if the file cannot be written
+   */
   public static File writeToFile(String sgf) {
     BufferedOutputStream bos = null;
     try {

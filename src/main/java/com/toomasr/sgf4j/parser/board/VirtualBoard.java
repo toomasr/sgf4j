@@ -11,12 +11,38 @@ import java.util.Set;
 import com.toomasr.sgf4j.parser.GameNode;
 import com.toomasr.sgf4j.parser.Util;
 
+/**
+ * Represents a virtual Go board for replaying games and tracking stone positions.
+ *
+ * <p>The board handles:</p>
+ * <ul>
+ *   <li>Stone placement and removal</li>
+ *   <li>Capture detection and removal of dead groups</li>
+ *   <li>Move undo with restoration of captured stones</li>
+ *   <li>Board listener notifications for UI updates</li>
+ * </ul>
+ *
+ * <p>Example usage:</p>
+ * <pre>
+ * VirtualBoard board = new VirtualBoard();
+ * GameNode node = game.getRootNode();
+ * GameNode prev = null;
+ * while (node != null) {
+ *     board.makeMove(node, prev);
+ *     prev = node;
+ *     node = node.getNextNode();
+ * }
+ * </pre>
+ */
 public class VirtualBoard {
   private int size = 19;
   private Square[][] vBoard = new Square[size][size];
   private List<BoardListener> boardListeners = new ArrayList<>();
   private Map<GameNode, Set<Group>> moveToRemovedGroups = new HashMap<>();
 
+  /**
+   * Creates a new empty 19x19 board.
+   */
   public VirtualBoard() {
     initEmptyBoard();
   }
@@ -29,6 +55,13 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Makes a move on the board, handling captures and notifying listeners.
+   * Records captured groups for potential undo.
+   *
+   * @param move the move to make
+   * @param prevMove the previous move (for listener context)
+   */
   public void makeMove(GameNode move, GameNode prevMove) {
     // only if the move is a visible move
     if (move.getMoveString() != null && !move.isPass() && !move.isPlacementMove()) {
@@ -46,6 +79,12 @@ public class VirtualBoard {
     playMove(move, prevMove);
   }
 
+  /**
+   * Undoes a move, removing the stone and restoring any captured stones.
+   *
+   * @param moveNode the move to undo
+   * @param prevMove the move that was before this one
+   */
   public void undoMove(GameNode moveNode, GameNode prevMove) {
     if (!moveNode.isPass() && !moveNode.isPlacementMove() && moveNode.getMoveString() != null) {
       String currMoveStr = moveNode.getMoveString();
@@ -73,6 +112,14 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Places a stone on the board and notifies listeners.
+   * Does not handle captures - use {@link #makeMove} for game moves.
+   *
+   * @param color the stone color
+   * @param x the x coordinate (0-18)
+   * @param y the y coordinate (0-18)
+   */
   public void placeStone(StoneState color, int x, int y) {
     this.vBoard[x][y] = new Square(color, x, y);
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
@@ -102,18 +149,42 @@ public class VirtualBoard {
     placeStone(gameNode.getColorAsEnum(), gameNode.getCoords()[0], gameNode.getCoords()[1]);
   }
 
+  /**
+   * Places a white stone at the specified coordinates.
+   *
+   * @param i the x coordinate
+   * @param j the y coordinate
+   */
   public void placeWhiteStone(int i, int j) {
     placeStone(new Square(StoneState.WHITE, i, j));
   }
 
+  /**
+   * Places a black stone at the specified coordinates.
+   *
+   * @param i the x coordinate
+   * @param j the y coordinate
+   */
   public void placeBlackStone(int i, int j) {
     placeStone(new Square(StoneState.BLACK, i, j));
   }
 
+  /**
+   * Removes dead groups of the opposite color (used after making a move).
+   *
+   * @param color the color that just played
+   * @return the set of groups that were removed
+   */
   public Set<Group> removeDeadGroupsForOppColor(StoneState color) {
     return removeDeadGroups(oppColor(color));
   }
 
+  /**
+   * Finds and removes all dead groups of the specified color.
+   *
+   * @param color the color to check for dead groups
+   * @return the set of groups that were removed
+   */
   public Set<Group> removeDeadGroups(StoneState color) {
     Set<Group> groups = findDistinctGroups(color);
     Set<Group> rtrn = new HashSet<>();
@@ -127,6 +198,12 @@ public class VirtualBoard {
     return rtrn;
   }
 
+  /**
+   * Removes a stone from the board and notifies listeners.
+   *
+   * @param x the x coordinate
+   * @param y the y coordinate
+   */
   public void removeStone(int x, int y) {
     vBoard[x][y] = new Square(x, y);
     for (Iterator<BoardListener> ite = boardListeners.iterator(); ite.hasNext();) {
@@ -135,6 +212,11 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Removes all stones in a group from the board.
+   *
+   * @param group the group to remove
+   */
   public void removeStones(Group group) {
     for (Iterator<Square> ite = group.stones.iterator(); ite.hasNext();) {
       Square square = ite.next();
@@ -142,6 +224,12 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Finds all distinct connected groups of stones of the specified color.
+   *
+   * @param color the stone color to find groups for
+   * @return set of distinct groups
+   */
   public Set<Group> findDistinctGroups(StoneState color) {
     Set<Square> alreadyChecked = new HashSet<>();
 
@@ -183,6 +271,13 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Returns the opposite color.
+   *
+   * @param color the input color (must not be EMPTY)
+   * @return BLACK if input is WHITE, WHITE if input is BLACK
+   * @throws RuntimeException if color is EMPTY
+   */
   public StoneState oppColor(StoneState color) {
     if (color.equals(StoneState.EMPTY))
       throw new RuntimeException("Wrong argument for oppColor");
@@ -201,10 +296,25 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Returns the square at the specified coordinates.
+   *
+   * @param x the x coordinate (0-18)
+   * @param y the y coordinate (0-18)
+   * @return the square at that position
+   */
   public Square getCoord(int x, int y) {
     return vBoard[x][y];
   }
 
+  /**
+   * Creates a board from a string representation. Each character represents
+   * a square: 'B' for black, 'W' for white, '.' for empty. Lines are separated
+   * by newlines.
+   *
+   * @param board the string board representation
+   * @return a new VirtualBoard with stones placed
+   */
   public static VirtualBoard setUpFromStringBoard(String board) {
     VirtualBoard rtrn = new VirtualBoard();
     String[] lines = board.split("\\n");
@@ -217,6 +327,13 @@ public class VirtualBoard {
     return rtrn;
   }
 
+  /**
+   * Fast-forwards the board to a specific node by replaying all moves from
+   * the root. Clears the board first and then plays all moves leading to
+   * the specified node.
+   *
+   * @param fwdTo the target node to fast-forward to
+   */
   public void fastForwardTo(GameNode fwdTo) {
     // the fwdTo could be an element in one of the child nodes
     // it is really difficult to find if we start from the rootNode
@@ -247,10 +364,20 @@ public class VirtualBoard {
     }
   }
 
+  /**
+   * Returns the underlying board array.
+   *
+   * @return 19x19 array of Squares
+   */
   public Square[][] getBoard() {
     return vBoard;
   }
 
+  /**
+   * Adds a listener to be notified of board changes.
+   *
+   * @param listener the listener to add
+   */
   public void addBoardListener(BoardListener listener) {
     this.boardListeners.add(listener);
   }

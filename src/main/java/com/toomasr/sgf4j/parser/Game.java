@@ -18,8 +18,27 @@ import com.toomasr.sgf4j.parser.board.StoneState;
 import com.toomasr.sgf4j.parser.board.VirtualBoard;
 
 /**
- * This class denotes a Go game. It deals with loading the game and saving the
- * game back to disk.
+ * Represents a complete Go game parsed from SGF format.
+ *
+ * <p>A Game contains:</p>
+ * <ul>
+ *   <li>Game-level properties (player names, date, result, etc.)</li>
+ *   <li>A tree of {@link GameNode}s representing moves and variations</li>
+ *   <li>Timing information for both players (if available in the SGF)</li>
+ * </ul>
+ *
+ * <p>Use {@link Sgf} factory methods to create Game instances:</p>
+ * <pre>
+ * Game game = Sgf.createFromPath(Paths.get("game.sgf"));
+ * GameNode node = game.getRootNode();
+ * while (node != null) {
+ *     // process node
+ *     node = node.getNextNode();
+ * }
+ * </pre>
+ *
+ * @see Sgf
+ * @see GameNode
  */
 public class Game {
   private static final Logger log = LoggerFactory.getLogger(Game.class);
@@ -46,9 +65,11 @@ public class Game {
   }
 
   /**
-   * Actually properties can be set multiple times and it seems based on other
-   * software that the expectation is that everything is appended rather than the
-   * last definition wins.
+   * Adds a game-level property. If the property already exists, values are concatenated
+   * with a comma separator (per SGF spec behavior).
+   *
+   * @param key the SGF property key (e.g., "PB" for black player name)
+   * @param value the property value
    */
   public void addProperty(String key, String value) {
     if (properties.get(key) != null) {
@@ -60,16 +81,32 @@ public class Game {
   }
 
   /**
-   * Sets the property by overwriting the previous value
+   * Sets the property by overwriting the previous value.
+   *
+   * @param key the SGF property key
+   * @param value the property value
    */
   public void setProperty(String key, String value) {
     properties.put(key, value);
   }
 
+  /**
+   * Gets a game-level property value.
+   *
+   * @param key the SGF property key (e.g., "PB", "PW", "DT", "RE")
+   * @return the property value, or null if not set
+   */
   public String getProperty(String key) {
     return properties.get(key);
   }
 
+  /**
+   * Gets a game-level property value with a default fallback.
+   *
+   * @param key the SGF property key
+   * @param defaultValue the value to return if the property is not set
+   * @return the property value, or defaultValue if not set
+   */
   public String getProperty(String key, String defaultValue) {
     if (properties.get(key) == null) {
       return defaultValue;
@@ -78,6 +115,11 @@ public class Game {
     }
   }
 
+  /**
+   * Returns a copy of all game-level properties.
+   *
+   * @return a new Map containing all properties
+   */
   public Map<String, String> getProperties() {
     return this.properties;
   }
@@ -86,14 +128,32 @@ public class Game {
     return properties.toString();
   }
 
+  /**
+   * Sets the root node of the game tree.
+   *
+   * @param rootNode the root node
+   */
   public void setRootNode(GameNode rootNode) {
     this.rootNode = rootNode;
   }
 
+  /**
+   * Returns the root node of the game tree. The root node typically contains
+   * setup information but not a move. Use {@link #getFirstMove()} to get the
+   * first actual move.
+   *
+   * @return the root node
+   */
   public GameNode getRootNode() {
     return rootNode;
   }
 
+  /**
+   * Returns the total number of moves in the main line of the game.
+   * Does not count setup nodes or nodes in variations.
+   *
+   * @return the number of moves
+   */
   public int getNoMoves() {
     return noMoves;
   }
@@ -293,10 +353,21 @@ public class Game {
     }
   }
 
+  /**
+   * Returns the total number of nodes in the main line of the game.
+   * Includes all nodes (moves, setup, comments, etc.) but not variations.
+   *
+   * @return the number of nodes
+   */
   public int getNoNodes() {
     return noNodes;
   }
 
+  /**
+   * Returns the first move node in the game (skipping any setup nodes).
+   *
+   * @return the first move node, or null if the game has no moves
+   */
   public GameNode getFirstMove() {
     GameNode node = getRootNode();
 
@@ -308,6 +379,11 @@ public class Game {
     return null;
   }
 
+  /**
+   * Returns the last move node in the main line of the game.
+   *
+   * @return the last move node, or null if the game has no moves
+   */
   public GameNode getLastMove() {
     GameNode node = getRootNode();
     GameNode rtrn = null;
@@ -319,14 +395,33 @@ public class Game {
     return rtrn;
   }
 
+  /**
+   * Saves the game to an SGF file.
+   *
+   * @param path the destination file path
+   */
   public void saveToFile(Path path) {
     Sgf.writeToFile(this, path);
   }
 
+  /**
+   * Compares this game with another for equality. Useful for verifying that
+   * parsing and re-serialization preserves game content.
+   *
+   * @param otherGame the game to compare with
+   * @return true if games have identical properties, nodes, and structure
+   */
   public boolean isSameGame(Game otherGame) {
     return isSameGame(otherGame, false);
   }
 
+  /**
+   * Compares this game with another for equality with optional verbose output.
+   *
+   * @param otherGame the game to compare with
+   * @param verbose if true, prints differences to stdout
+   * @return true if games have identical properties, nodes, and structure
+   */
   public boolean isSameGame(Game otherGame, final boolean verbose) {
     if (this.equals(otherGame)) {
       if (verbose) {
@@ -459,14 +554,30 @@ public class Game {
     return true;
   }
 
+  /**
+   * Returns the original SGF string that was parsed to create this game.
+   *
+   * @return the original SGF string, or null if not available
+   */
   public String getOriginalSgf() {
     return originalSgf;
   }
 
+  /**
+   * Sets the original SGF string for reference.
+   *
+   * @param originalSgf the original SGF content
+   */
   public void setOriginalSgf(String originalSgf) {
     this.originalSgf = originalSgf;
   }
 
+  /**
+   * Generates an SGF string representation of this game. The output can be
+   * saved to a file and re-parsed to recreate the game.
+   *
+   * @return the game as an SGF-formatted string
+   */
   public String getGeneratedSgf() {
     StringBuilder rtrn = new StringBuilder();
     rtrn.append("(");
@@ -497,6 +608,15 @@ public class Game {
     return rtrn.toString();
   }
 
+  /**
+   * Generates an SGF string representing the board position at a specific node.
+   * The output includes the current stone positions (similar to FEN in chess)
+   * plus any remaining moves from that point.
+   *
+   * @param node the game node representing the current position
+   * @param vBoard the virtual board with the current stone positions
+   * @return an SGF string with the position setup and remaining moves
+   */
   public String getPositionSgf(GameNode node, VirtualBoard vBoard) {
     StringBuilder rtrn = new StringBuilder();
     rtrn.append("(");
@@ -596,14 +716,29 @@ public class Game {
     }
   }
 
+  /**
+   * Returns whether timing information (BL/WL properties) was found in the SGF.
+   *
+   * @return true if timing information is available
+   */
   public boolean getTimingInfoFound() {
     return this.timingInfoFound;
   }
 
+  /**
+   * Returns timing statistics for White's moves.
+   *
+   * @return timing info with min, max, avg, and median move times in seconds
+   */
   public MoveTimingInfo getWTimings() {
     return wTimings;
   }
 
+  /**
+   * Returns timing statistics for Black's moves.
+   *
+   * @return timing info with min, max, avg, and median move times in seconds
+   */
   public MoveTimingInfo getBTimings() {
     return bTimings;
   }
