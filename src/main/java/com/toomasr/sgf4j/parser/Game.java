@@ -555,17 +555,25 @@ public class Game {
   }
 
   private void populateSgf(GameNode node, StringBuilder sgfString) {
-    // print out the node prefix but skip for root node
-    if (node.getMoveNo() != -1) {
+    // print out the node (skip empty nodes that have no properties)
+    boolean hasProperties = false;
+    for (Map.Entry<String, String> entry : node.getProperties().entrySet()) {
+      if (!"TimeSpentOnMove".equals(entry.getKey())) {
+        hasProperties = true;
+        break;
+      }
+    }
+
+    if (hasProperties) {
       sgfString.append(";");
+      for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
+        Map.Entry<String, String> entry = ite.next();
+        if ("TimeSpentOnMove".equals(entry.getKey()))
+          continue;
+        sgfString.append(entry.getKey() + "[" + entry.getValue() + "]");
+      }
+      sgfString.append("\n");
     }
-    for (Iterator<Map.Entry<String, String>> ite = node.getProperties().entrySet().iterator(); ite.hasNext();) {
-      Map.Entry<String, String> entry = ite.next();
-      if ("TimeSpentOnMove".equals(entry.getKey()))
-        continue;
-      sgfString.append(entry.getKey() + "[" + entry.getValue() + "]");
-    }
-    sgfString.append("\n");
 
     // if we have children then first print out the
     // getNextNode() and then the rest of the children
