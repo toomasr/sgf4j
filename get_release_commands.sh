@@ -42,48 +42,30 @@ echo "./mvnw versions:set -DnewVersion=${version}"
 
 echo ""
 echo "# 2) commit & tag"
-echo "git add pom.xml; "
+echo "git add pom.xml"
 echo "git commit -m \"Prepare release sgf4j-parser-${version}\""
 echo "git tag sgf4j-parser-${version}"
 
 echo ""
-echo "# 3) build release"
-echo "./mvnw clean install"
+echo "# 3) deploy to central (builds, signs, and deploys)"
+echo "./mvnw clean deploy"
 
 echo ""
-echo "# 4) generate javadoc archive"
-echo "./mvnw javadoc:jar"
+echo "# 4) Go to https://central.sonatype.com/publishing/deployments"
+echo "# And Drop or Publish"
 
 echo ""
-echo "# 5) generate sources archive"
-echo "./mvnw source:jar"
-
-echo ""
-echo "# 6) deploy and sign releases archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1.jar"
-
-echo ""
-echo "# 7) deploy and sign sources archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1-sources.jar -Dclassifier=sources"
-
-echo ""
-echo "# 8) deploy and sign javadoc archive"
-echo "./mvnw gpg:sign-and-deploy-file -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DrepositoryId=sonatype-nexus-staging -DpomFile=pom.xml -Dfile=target/sgf4j-parser-$1-javadoc.jar -Dclassifier=javadoc"
-
-echo ""
-echo "# 9) set new development version"
+echo "# 5) set new development version"
 echo "./mvnw versions:set -DnewVersion=${new_version}"
-echo "git add pom.xml; "
+echo "./mvnw versions:commit"
+echo "git add pom.xml"
 echo "git commit -m \"prepare for next development iteration\""
 
 echo ""
-echo "# 10) push to GitHub"
+echo "# 6) push to GitHub"
 echo "git push"
 echo "git push --tags"
 
 echo ""
-echo "# 11) clean local repo"
-echo "git clean -f"
-
-
-
+echo "# 7) clean local repo"
+echo "git clean -fd"

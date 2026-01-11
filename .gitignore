@@ -9,3 +9,4 @@ src/main/java/com/toomasr/sgf4j/tmp
 rebel.xml
 /.apt_generated/
 /.apt_generated_tests/
+.vscode
