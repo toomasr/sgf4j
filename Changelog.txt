@@ -1,0 +1,3 @@
+0.0.7
+ - Bugfix in writing SGF files
+ - Updating and unifying logging dependency versions
